@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\HolidayController;
 use App\Http\Controllers\Admin\CompanyPolicyController;
 use App\Http\Controllers\Admin\CompanyDetailController;
 use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\RoleManagerController;
 use App\Http\Controllers\Admin\PermissionManagerController;
 use App\Http\Controllers\Admin\EmployeeRoleController;
@@ -106,4 +107,5 @@ Route::prefix("admin")->group(function(){
           Route::get('/destroy/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
      });
 
+     
 });

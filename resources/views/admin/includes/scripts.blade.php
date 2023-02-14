@@ -13,3 +13,4 @@
 
 <!-- Page js file -->
 <script src="{{ asset('storage/assets/bundles/datatablescripts.bundle.js') }}"></script>
+<script src="{{ asset('storage/assets/vendor/dropify/js/dropify.min.js') }}"></script>
