@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('role_managers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->string('slug');
             $table->string('description')->nullable();
             $table->integer('status')->default(1)->comment('1 for Active, 2 for Inactive');
             $table->timestamps();

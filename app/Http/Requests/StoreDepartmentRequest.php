@@ -26,6 +26,7 @@ class StoreDepartmentRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
+            'status' => 'nullable',
         ];
     }
 
@@ -40,6 +41,9 @@ class StoreDepartmentRequest extends FormRequest
             'name.required' => 'Department name is required',
             'name.string' => 'Department name must be a string',
             'name.max' => 'Department name must not be greater than 255 characters',
+            'description.string' => 'Department description must be a string',
+            'description.max' => 'Department description must not be greater than 255 characters',
+            'status.required' => 'Department status is required',
         ];
     }
 }

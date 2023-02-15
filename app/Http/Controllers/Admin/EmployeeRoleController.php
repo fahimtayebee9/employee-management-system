@@ -7,6 +7,7 @@ use App\Http\Requests\StoreEmployeeRoleRequest;
 use App\Http\Requests\UpdateEmployeeRoleRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class EmployeeRoleController extends Controller
 {
@@ -61,6 +62,7 @@ class EmployeeRoleController extends Controller
         $employeeRole->name = $request->name;
         $employeeRole->description = $request->description;
         $employeeRole->status = $request->status;
+        $employeeRole->slug = Str::slug($request->name);
         $employeeRole->save();
 
         return redirect()->back()->with('success', 'Employee Role created successfully');
@@ -110,7 +112,8 @@ class EmployeeRoleController extends Controller
         $employeeRole->name = $request->name;
         $employeeRole->description = $request->description;
         $employeeRole->status = $request->status;
-        $employeeRole->save();
+        $employeeRole->slug = Str::slug($request->name);
+        $employeeRole->update();
 
         return redirect()->back()->with('success', 'Employee Role updated successfully');
     }

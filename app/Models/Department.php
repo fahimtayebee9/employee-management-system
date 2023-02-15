@@ -13,5 +13,6 @@ class Department extends Model
         'name',
         'description',
         'status',
+        'slug',
     ];
 }

@@ -27,11 +27,11 @@ Route::get('/', function () {
 });
 
 // create route group for admin
-Route::prefix("admin")->group(function(){
+Route::prefix("admin")->group(function () {
     Route::get('/', function () {
         return view('admin.layouts.app');
     })->name('admin.dashboard');
-    
+
     Route::resource("holidays", HolidayController::class, [
         'names' => [
             'index' => 'holidays.index',
@@ -42,7 +42,15 @@ Route::prefix("admin")->group(function(){
             'destroy' => 'holidays.destroy',
         ]
     ]);
-    
+
+    // Route group for departments
+    Route::group(['prefix' => 'departments'], function () {
+        Route::get('/', [DepartmentController::class, 'index'])->name('departments.index');
+        Route::post('/store', [DepartmentController::class, 'store'])->name('departments.store');
+        Route::post('/update/{roleManager}', [DepartmentController::class, 'update'])->name('departments.update');
+        Route::get('/destroy/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
+    });
+
     Route::group(['prefix' => 'company-policy'], function () {
         Route::get('/', [CompanyPolicyController::class, 'index'])->name('company-policy.index');
         Route::post('/update', [CompanyPolicyController::class, 'update'])->name('company-policy.update');
@@ -53,13 +61,7 @@ Route::prefix("admin")->group(function(){
         Route::post('/update', [CompanyPolicyController::class, 'update'])->name('company-details.update');
     });
 
-    // Route group for departments
-    Route::group(['prefix' => 'departments'], function () {
-        Route::get('/', [DepartmentController::class, 'index'])->name('departments.index');
-        Route::post('/store', [DepartmentController::class, 'store'])->name('departments.store');
-        Route::post('/update/{roleManager}', [DepartmentController::class, 'update'])->name('departments.update');
-        Route::get('/destroy/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
-    });
+
 
     // Administration routes
     Route::group(['prefix' => 'administration'], function () {
@@ -80,7 +82,7 @@ Route::prefix("admin")->group(function(){
     Route::group(['prefix' => 'permissions'], function () {
         Route::get('/', [PermissionManagerController::class, 'index'])->name('permissions.index');
         Route::get('/create', [PermissionManagerController::class, 'create'])->name('permissions.create');
-        
+
         Route::post('/store', [PermissionManagerController::class, 'store'])->name('permissions.store');
         Route::post('/update/{permission}', [PermissionManagerController::class, 'update'])->name('permissions.update');
         Route::get('/destroy/{permission}', [PermissionManagerController::class, 'destroy'])->name('permissions.destroy');
@@ -96,16 +98,14 @@ Route::prefix("admin")->group(function(){
         Route::get('/destroy/{employeeRole}', [EmployeeRoleController::class, 'destroy'])->name('designations.destroy');
     });
 
-   // routes for employee management
+    // routes for employee management
     Route::group(['prefix' => 'employees'], function () {
-          Route::get('/', [EmployeeController::class, 'index'])->name('admin.employees.index');
-          Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
-          Route::post('/store', [EmployeeController::class, 'store'])->name('employees.store');
-          Route::get('/show/{employee}', [EmployeeController::class, 'show'])->name('employees.show');
-          Route::get('/edit/{employee}', [EmployeeController::class, 'edit'])->name('employees.edit');
-          Route::post('/update/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
-          Route::get('/destroy/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
-     });
-
-     
+        Route::get('/', [EmployeeController::class, 'index'])->name('admin.employees.index');
+        Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
+        Route::post('/store', [EmployeeController::class, 'store'])->name('employees.store');
+        Route::get('/show/{employee}', [EmployeeController::class, 'show'])->name('employees.show');
+        Route::get('/edit/{employee}', [EmployeeController::class, 'edit'])->name('employees.edit');
+        Route::post('/update/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
+        Route::get('/destroy/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+    });
 });

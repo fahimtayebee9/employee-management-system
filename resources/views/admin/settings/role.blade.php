@@ -51,9 +51,9 @@
                         </thead>
                         <tbody>
                             @foreach($roles_list as $role)
-                                @if($role->name != "Super Super Admin")
+                                @if($role->id != 1)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $loop->iteration - 1  }}</td>
                                     <td>{{ $role->name }}</td>
                                     <td>{{ $role->description }}</td>
                                     <td>

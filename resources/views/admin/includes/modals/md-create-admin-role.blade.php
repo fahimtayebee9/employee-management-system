@@ -28,6 +28,14 @@
                         </span>
                         @enderror
                     </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select name="status" id="status" class="form-control">
+                            <option value="">Choose an option</option>
+                            <option value="1" >Active</option>
+                            <option value="0" >Inactive</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

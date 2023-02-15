@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateRoleManagerRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class RoleManagerController extends Controller
 {
@@ -52,10 +53,16 @@ class RoleManagerController extends Controller
      */
     public function store(StoreRoleManagerRequest $request)
     {
-        $validated_data = Validator::make($request->all(), $request->rules(), $request->messages())->validate();
+        $validated_data = Validator::make($request->all(), $request->rules(), $request->messages());
 
-        if($validated_data){
-            $roleManager = RoleManager::create($validated_data);
+        if($validated_data->passes()){
+            $roleManager = new RoleManager();
+            $roleManager->name = $request->name;
+            $roleManager->description = $request->description;
+            $roleManager->status = $request->status;
+            $roleManager->slug = Str::slug($request->name);
+            $roleManager->save();
+
             return redirect()->back()->with('success', 'Administrative Role created successfully');
         }
         
@@ -96,7 +103,13 @@ class RoleManagerController extends Controller
         $validated_data = Validator::make($request->all(), $request->rules(), $request->messages())->validate();
 
         if($validated_data){
-            $roleManager->update($validated_data);
+            $roleManager = RoleManager::find($roleManager->id);
+            $roleManager->name = $request->name;
+            $roleManager->description = $request->description;
+            $roleManager->status = $request->status;
+            $roleManager->slug = Str::slug($request->name);
+            $roleManager->update();
+
             return redirect()->back()->with('success', 'Administrative Role updated successfully');
         }
         
@@ -109,8 +122,19 @@ class RoleManagerController extends Controller
      * @param  \App\Models\RoleManager  $roleManager
      * @return \Illuminate\Http\Response
      */
-    public function destroy(RoleManager $roleManager)
+    public function destroy($roleManager)
     {
-        //
+        // check if the role is not the default role
+        // if($roleManager != 1){
+        //     $role = RoleManager::find($roleManager);
+
+        //     // check if role is not assigned to any user
+        //     if($role->users->count() > 0){
+        //         return redirect()->back()->with('error', 'Administrative Role is assigned to some users. Please remove the role from the users first');
+        //     }
+
+        //     $role->delete();
+        //     return redirect()->back()->with('success', 'Administrative Role deleted successfully');
+        // }
     }
 }

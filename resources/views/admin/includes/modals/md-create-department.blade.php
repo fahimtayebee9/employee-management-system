@@ -7,7 +7,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('departments.store') }}" method="post">
+            <form action="{{ route('departments.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
@@ -27,6 +27,14 @@
                             <strong>{{ $message }}</strong>
                         </span>
                         @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select name="status" id="status" class="form-control">
+                            <option value="">Choose an option</option>
+                            <option value="1" >Active</option>
+                            <option value="2" >Inactive</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
