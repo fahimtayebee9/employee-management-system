@@ -58,11 +58,11 @@
                         'Holiday',
                         'Company Policy',
                         'Launch',
-                        'Leave',
+                        'Leaves',
                         'Departments',
                         'Payroll',
                         'Accounts',
-                        'Task',
+                        'Task Management',
                         'Report',
                         'Administration',
                         ];

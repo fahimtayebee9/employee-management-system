@@ -57,7 +57,7 @@
                             <ul>
                                 <li><a href="{{ route('admin.employees.index') }}">All Employees</a></li>
                                 <li><a href="{{ route('admin.employees.index') }}">Leave Requests</a></li>
-                                <li><a href="{{ route('admin.employees.index') }}">Attendance</a></li>
+                                <li><a href="{{ route('admin.attendance.index') }}">Attendance</a></li>
                                 <li class="{{ ($active_menu == 'departments') ? 'active' : '' }}"><a href="{{ route('departments.index') }}">Departments</a></li>
                                 <li class="{{ ($active_menu == 'designations') ? 'active' : '' }}"><a href="{{ route('designations.index') }}">Designations</a></li>
                             </ul>

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Crypt;
 use Image;
+use App\Models\Employee;
 
 class UserController extends Controller
 {
@@ -68,10 +69,15 @@ class UserController extends Controller
                 ->withErrors($validated_data)
                 ->withInput();
         }
+
+        // get last user id
+        $last_username = User::orderBy('id', 'desc')->first()->username;
         
         $user               = new User();
-        $user->name         = $request->name;
-        $user->username     = $request->username;
+        $name_array         = explode(' ', $request->name);
+        $user->first_name   = (count($name_array) > 2) ? implode(' ', array_slice($name_array, 0, -1)) : $request->name;
+        $user->last_name    = $name_array[count($name_array) - 1];
+        $user->username     = (!empty($last_username)) ? $last_username + 1 : $request->username;
         $user->email        = $request->email;
         $user->phone        = $request->phone;
         $user->role_id      = $request->role_id;
@@ -89,10 +95,36 @@ class UserController extends Controller
 
         $user->save();
 
+        // create employee record if role is not super admnin
+        if ($request->role_id != RoleManager::where('name', 'Super Admin')->first()->id) {
+            $employee                   = new Employee();
+            $employee->user_id          = $user->id;
+            $employee->employee_id      = $user->username;
+            $employee->department_id    = $request->department_id;
+            $employee->designation_id   = $request->designation_id;
+            $employee->team_lead_id     = $request->team_lead_id;
+            $employee->monthly_salary   = $request->monthly_salary;
+            $employee->awards_won       = $request->awards_won;
+            $employee->joining_date     = $request->joining_date;
+            $employee->save();
+
+            return redirect()->route('administration.index')->with([
+                'success' => 'User has been created with employee details successfully.',
+                'type' => 'success',
+            ]);
+        }
+
         return redirect()->back()->with([
             'success' => 'User has been created successfully.',
             'type' => 'success',
         ]);
+    }
+
+    // public function to get the username
+    public function getUserName(Request $request)
+    {
+        $username = User::orderBy('id', 'desc')->first()->username;
+        return response()->json(['username' => $username, 'status' => 200, 'message' => 'success']);
     }
 
     /**
@@ -122,7 +154,14 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        
+        $userInfo = User::find($id);
+
+        if($userInfo->role_id != RoleManager::where('name', 'Super Admin')->first()->id){
+            $employeeInfo = Employee::where('user_id', $id)->first();
+            return view('admin.administration.edit', compact('userInfo', 'employeeInfo'));
+        }
+
+        return view('admin.administration.edit', compact('userInfo'));
     }
 
     /**
@@ -136,7 +175,7 @@ class UserController extends Controller
     {
         $validated_data = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:8|confirmed',
         ], [
             'name.required' => 'Name is required',
@@ -152,17 +191,24 @@ class UserController extends Controller
                 ->withInput();
         }
         else if(!empty($user)){
-            $user->name         = $request->name;
+            $name_array         = explode(' ', $request->name);
+            $user->first_name   = (count($name_array) > 2) ? implode(' ', array_slice($name_array, 0, -1)) : $request->name;
+            $user->last_name    = $name_array[count($name_array) - 1];
+            $user->username     = (!empty($last_username)) ? $last_username + 1 : $request->username;
             $user->email        = $request->email;
             $user->phone        = $request->phone;
             $user->role_id      = $request->role_id;
             $user->blood_group  = $request->blood_group;
             $user->password     = bcrypt($request->password);
             $user->cspwdbycrt   = Crypt::encryptString($request->password);
-    
+
             if ($request->hasFile('image')) {
-                if(!empty($user->image) && file_exists(public_path('storage/uploads/users/' . $user->image))){
-                    unlink(public_path('storage/uploads/users/' . $user->image));
+                // delete old image
+                if ($user->image != 'default.png' && $user->image != '') {
+                    $old_image = public_path('storage/uploads/users/' . $user->image);
+                    if (file_exists($old_image)) {
+                        unlink($old_image);
+                    }
                 }
                 $file = $request->file('image');
                 $filename = 'img_' . time() . '.' . $file->getClientOriginalExtension();
@@ -170,8 +216,27 @@ class UserController extends Controller
                 Image::make($file)->save($location);
                 $user->image = $filename;
             }
-    
+
             $user->update();
+
+            // create employee record if role is not super admnin
+            if ($request->role_id != RoleManager::where('name', 'Super Admin')->first()->id) {
+                $employee                   = new Employee();
+                $employee->user_id          = $user->id;
+                $employee->employee_id      = $user->username;
+                $employee->department_id    = $request->department_id;
+                $employee->designation_id   = $request->designation_id;
+                $employee->team_lead_id     = $request->team_lead_id;
+                $employee->monthly_salary   = $request->monthly_salary;
+                $employee->awards_won       = $request->awards_won;
+                $employee->joining_date     = $request->joining_date;
+                $employee->update();
+
+                return redirect()->route('administration.index')->with([
+                    'success' => 'User has been created with employee details successfully.',
+                    'type' => 'success',
+                ]);
+            }
     
             return redirect()->back()->with([
                 'success' => 'User has been Updated successfully.',
@@ -184,8 +249,6 @@ class UserController extends Controller
                 'type' => 'danger',
             ]);
         }
-
-        
     }
 
     /**
@@ -206,7 +269,7 @@ class UserController extends Controller
         foreach ($tableNames as $table) {
             $tabledata = DB::table($table)->where('user_id', $id)->first();
             if(!empty($tabledata)){
-                return redirect()->back()->with([
+                return redirect()->route('administration.index')->with([
                     'success' => 'User has been used in other table.',
                     'type' => 'danger',
                 ]);
@@ -218,13 +281,13 @@ class UserController extends Controller
                 unlink(public_path('storage/uploads/users/' . $user->image));
             }
             $user->delete();
-            return redirect()->back()->with([
+            return redirect()->route('administration.index')->with([
                 'success' => 'User has been deleted successfully.',
                 'type' => 'success',
             ]);
         }
         else{
-            return redirect()->back()->with([
+            return redirect()->route('administration.index')->with([
                 'success' => 'User not found.',
                 'type' => 'danger',
             ]);

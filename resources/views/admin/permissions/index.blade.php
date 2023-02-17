@@ -335,25 +335,25 @@
                                     </td>
                                     <td>
                                         <div style="display: grid!important;">
-                                            @if($permission->task_management_read == 1)
+                                            @if($permission->report_read == 1)
                                             <p class="badge badge-success d-inline">Read <i class="icon-check text-success"></i></p>
                                             @else
                                             <p class="badge badge-danger">Read <i class="icon-close text-danger"></i></p>
                                             @endif
 
-                                            @if($permission->task_management_create == 1)
+                                            @if($permission->report_create == 1)
                                             <p class="badge badge-success">Create <i class="icon-check text-success"></i></p>
                                             @else
                                             <p class="badge badge-danger">Create <i class="icon-close text-danger"></i></p>
                                             @endif
 
-                                            @if($permission->task_management_update == 1)
+                                            @if($permission->report_update == 1)
                                             <p class="badge badge-success">Update <i class="icon-check text-success"></i></p>
                                             @else
                                             <p class="badge badge-danger">Update <i class="icon-close text-danger"></i></p>
                                             @endif
 
-                                            @if($permission->task_management_delete == 1)
+                                            @if($permission->report_delete == 1)
                                             <p class="badge badge-success">Delete <i class="icon-check text-success"></i></p>
                                             @else
                                             <p class="badge badge-danger">Delete <i class="icon-close text-danger"></i></p>

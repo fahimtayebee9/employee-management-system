@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\HolidayController;
 use App\Http\Controllers\Admin\CompanyPolicyController;
 use App\Http\Controllers\Admin\CompanyDetailController;
@@ -68,6 +69,9 @@ Route::prefix("admin")->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('administration.index');
         Route::get('/users/create', [UserController::class, 'create'])->name('administration.users.create');
         Route::post('/users/store', [UserController::class, 'store'])->name('administration.users.store');
+        Route::get('/users/lastUserName', [UserController::class, 'getUserName'])->name('admin.administration.findLastUsername');
+        Route::get('/users/edit/{user}', [UserController::class, 'edit'])->name('administration.users.edit');
+        Route::post('/users/update/{user}', [UserController::class, 'update'])->name('administration.users.update');
     });
 
     // Route group for Roles
@@ -107,5 +111,16 @@ Route::prefix("admin")->group(function () {
         Route::get('/edit/{employee}', [EmployeeController::class, 'edit'])->name('employees.edit');
         Route::post('/update/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
         Route::get('/destroy/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+    });
+
+    // routes for attendance management
+    Route::group(['prefix' => 'attendance'], function () {
+        Route::get('/', [AttendanceController::class, 'index'])->name('admin.attendance.index');
+        Route::get('/create', [AttendanceController::class, 'create'])->name('admin.attendance.create');
+        Route::post('/store', [AttendanceController::class, 'store'])->name('admin.attendance.store');
+        Route::get('/show/{attendance}', [AttendanceController::class, 'show'])->name('admin.attendance.show');
+        Route::get('/edit/{attendance}', [AttendanceController::class, 'edit'])->name('admin.attendance.edit');
+        Route::post('/update/{attendance}', [AttendanceController::class, 'update'])->name('admin.attendance.update');
+        Route::get('/destroy/{attendance}', [AttendanceController::class, 'destroy'])->name('admin.attendance.destroy');
     });
 });

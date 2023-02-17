@@ -102,6 +102,8 @@ class PermissionManagerController extends Controller
      */
     public function update(UpdatePermissionManagerRequest $request, $permissionManager)
     {
+        // dd($request->all());
+
         $validated_data = Validator::make($request->all(), $request->rules(), $request->messages())->validate();
 
         if($validated_data) {

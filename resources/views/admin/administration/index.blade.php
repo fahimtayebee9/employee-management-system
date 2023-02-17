@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div class="body">
-                <div class="table-responsive">
+                <div class="">
                     @if(!empty($users))
                     <table style="width:100%!important; text-overflow: ellipsis;" class="table table-hover js-basic-example dataTable table-custom table-striped m-b-0 c_list no-footer" id="administrative_users_tbl" role="grid" aria-describedby="administrative_users_tbl_info">
                         <thead class="thead-dark">
@@ -62,7 +62,7 @@
                                                 <img src="{{asset('storage/uploads/users/' . $user->image)}}" class="rounded-circle avatar" alt="">
                                             </span>
                                             <span>
-                                                <h6 class="mb-0">{{$user->name}}</h6>
+                                                <h6 class="mb-0">{{$user->first_name . ' '. $user->last_name}}</h6>
                                                 <span>{{$user->email}}</span>
                                             </span>
                                         </td>
@@ -86,7 +86,7 @@
                                                 <img src="{{asset('storage/uploads/users/' . $user->image)}}" class="rounded-circle avatar" alt="">
                                             </span>
                                             <span>
-                                                <h6 class="mb-0">{{$user->name}}</h6>
+                                                <h6 class="mb-0">{{$user->first_name . ' '. $user->last_name}}</h6>
                                                 <span>{{$user->email}}</span>
                                             </span>
                                         </td>
