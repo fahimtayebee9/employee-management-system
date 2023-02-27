@@ -13,15 +13,9 @@
                     </a>
                 </li>
                 <li class="breadcrumb-item active">
-                    Employee List
+                    Attendance List
                 </li>
             </ul>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-12 d-flex align-items-center justify-content-end">
-            <a href="{{ route('administration.users.create') }}" class="btn btn-primary">
-                <i class="fa fa-plus"></i>
-                <span>Add New User</span>
-            </a>
         </div>
     </div>
 </div>
@@ -32,7 +26,7 @@
             <div class="header">
                 <div class="table-header-actions row">
                     <div class="col-md-6">
-                        <h2>All Employee Attendance List</h2>
+                        <h2>{{ session()->get('page_title_description') }}</h2>
                     </div>
                     <div class="col-md-6 justify-content-end d-flex">
 
@@ -79,43 +73,35 @@
                                             $day = $week_days[$company_policy->weekly_holiday];
                                             
                                             // check if attendance is marked for this date
-                                            $attendance = \App\Models\Attendance::where('employee_id', $item->id)->whereDate('date', $date)->first();
+                                            $ldate_sheet = \App\Models\LaunchSheet::where('employee_id', $item->id)->whereDate('date', $date)->first();
                                             
                                         @endphp
                                         @if($date->format('l') == $day)
                                             <td>
                                                 <span class="badge badge-danger">H</span>
                                             </td>
-                                        @elseif(empty($attendance))
+                                        @elseif(empty($ldate_sheet))
                                             <td>
                                                 <span class="badge badge-danger">
                                                     <i class="fa fa-close text-danger"></i>
                                                 </span>
                                             </td>
-                                        @elseif(!empty($attendance))
+                                        @elseif(!empty($ldate_sheet))
                                             <td class="text-center p-1">
-                                                @if($attendance->status == 1)
+                                                @if($ldate_sheet->status == 1)
                                                     <a href="javascript:void(0);" class="m-0 badge badge-success" data-toggle="modal" data-target="#attendance_info_{{ $item->employee_id }}">
-                                                        <i class="fa fa-check text-success"></i>
-                                                    </a>
-                                                @elseif($attendance->status == 2)
+                                                        <i class="fa fa-check text-success"></i> Y
+                                                    </a> 
+                                                @elseif($ldate_sheet->status == 0)
                                                 <a href="javascript:void(0);"  class="badge badge-danger" data-toggle="modal" data-target="#attendance_info_{{ $item->employee_id }}">
-                                                    <i class="fa fa-close text-danger"></i>
+                                                    <i class="fa fa-close text-danger"></i> N
                                                 </a>
-                                                @elseif($attendance->status == 3)
+                                                @elseif($ldate_sheet->status == 2)
                                                 <span class="badge badge-danger">
                                                     <a href="javascript:void(0);"  data-toggle="modal" data-target="#attendance_info_{{ $item->employee_id }}">
-                                                        <i class="fa fa-close text-danger"></i>
+                                                        <i class="fa fa-close text-danger"></i> W
                                                     </a>
                                                 </span>
-                                                @elseif($attendance->status == 5)
-                                                    <a href="javascript:void(0);" class="badge badge-warning" data-toggle="modal" data-target="#attendance_info_{{ $item->employee_id }}">
-                                                        L
-                                                    </a>
-                                                @elseif($attendance->status == 6)
-                                                    <a href="javascript:void(0);" class="badge badge-warning" data-toggle="modal" data-target="#attendance_info_{{ $item->employee_id }}">
-                                                        H
-                                                    </a>
                                                 @endif
 
                                                 @include('admin.includes.modals.mdl-attendance-info')
@@ -131,6 +117,46 @@
                                     </td>
                                 </tr>
                             @endforeach
+                            <tr>
+                                <!-- Extra Launch -->
+                                <td>
+                                    <h6 class="mb-0">Extra Launch</h6>
+                                </td>
+                                @for($i = 1; $i <= $total_days; $i++)
+                                <td>
+                                    <!-- Ajax Form with select box -->
+                                    <select name="extra-launch" id="extra-launch">
+                                        <option value="0"  @if(false) selected @endif>0</option>
+                                        <option value="1"  @if("false" == "selected") selected @endif>1</option>
+                                        <option value="2"  @if("false" == "selected") selected @endif>2</option>
+                                        <option value="3"  @if("false" == "selected") selected @endif>3</option>
+                                        <option value="4"  @if("false" == "selected") selected @endif>4</option>
+                                        <option value="5"  @if("false" == "selected") selected @endif>5</option>
+                                        <option value="6"  @if("false" == "selected") selected @endif>6</option>
+                                        <option value="7"  @if("false" == "selected") selected @endif>7</option>
+                                        <option value="8"  @if("false" == "selected") selected @endif>8</option>
+                                        <option value="9"  @if("false" == "selected") selected @endif>9</option>
+                                        <option value="10" @if("false" == "selected") selected @endif>10</option>
+                                    </select>
+                                </td>
+                                @endfor
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h6 class="mb-0">Total</h6>
+                                </td>
+                                @for($i = 1; $i <= $total_days; $i++)
+                                    @php
+                                        // check if attendance is marked for this date
+                                        $ldate_sheet = \App\Models\LaunchSheet::where('date', $date)->where('status', 1)->get();
+                                        
+                                    @endphp
+                                    <td class="text-center p-1">
+                                        <span class="badge badge-success">{{ count($ldate_sheet) }}</span>
+                                    </td>
+                                @endfor
+                                <!-- Summary of attendance -->
+                            </tr>
                         </tbody>
                     </table>
                     @else

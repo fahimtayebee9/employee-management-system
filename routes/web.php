@@ -9,19 +9,11 @@ use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\RoleManagerController;
 use App\Http\Controllers\Admin\PermissionManagerController;
 use App\Http\Controllers\Admin\EmployeeRoleController;
+use App\Http\Controllers\Admin\LeaveController;
+use App\Http\Controllers\Admin\LaunchSheetController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::get('/', function () {
     return view('welcome');
@@ -59,7 +51,7 @@ Route::prefix("admin")->group(function () {
     });
 
     Route::group(['prefix' => 'company-details'], function () {
-        Route::post('/update', [CompanyPolicyController::class, 'update'])->name('company-details.update');
+        Route::post('/update/{companyDetail}', [CompanyDetailController::class, 'update'])->name('company-details.update');
     });
 
 
@@ -123,4 +115,49 @@ Route::prefix("admin")->group(function () {
         Route::post('/update/{attendance}', [AttendanceController::class, 'update'])->name('admin.attendance.update');
         Route::get('/destroy/{attendance}', [AttendanceController::class, 'destroy'])->name('admin.attendance.destroy');
     });
+
+    // routes for leave management
+    Route::group(['prefix' => 'leave'], function () {
+        Route::get('/', [LeaveController::class, 'index'])->name('admin.leave.index');
+        Route::get('/create', [LeaveController::class, 'create'])->name('admin.leave.create');
+        Route::post('/store', [LeaveController::class, 'store'])->name('admin.leave.store');
+        Route::get('/show/{leave}', [LeaveController::class, 'show'])->name('admin.leave.show');
+        Route::get('/edit/{leave}', [LeaveController::class, 'edit'])->name('admin.leave.edit');
+        Route::post('/update/{leave}', [LeaveController::class, 'update'])->name('admin.leave.update');
+        Route::get('/destroy/{leave}', [LeaveController::class, 'destroy'])->name('admin.leave.destroy');
+    });
+
+    Route::group(['prefix' => 'launch-sheet'], function(){
+        Route::get('/', [LaunchSheetController::class, 'index'])->name('admin.launch-sheet.index');
+        Route::get('/create', [LaunchSheetController::class, 'create'])->name('admin.launch-sheet.create');
+        Route::post('/store', [LaunchSheetController::class, 'store'])->name('admin.launch-sheet.store');
+        Route::get('/show/{launchSheet}', [LaunchSheetController::class, 'show'])->name('admin.launch-sheet.show');
+        Route::get('/edit/{launchSheet}', [LaunchSheetController::class, 'edit'])->name('admin.launch-sheet.edit');
+        Route::post('/update/{launchSheet}', [LaunchSheetController::class, 'update'])->name('admin.launch-sheet.update');
+        Route::get('/destroy/{launchSheet}', [LaunchSheetController::class, 'destroy'])->name('admin.launch-sheet.destroy');
+    });
+});
+
+Route::prefix('employee')->group(function(){
+    Route::get('/dashboard', [PageController::class, 'empDashboard'])->name('employee.dashboard');
+
+    Route::get('/profile', [PageController::class, 'empProfile'])->name('employee.profile');
+    
+    Route::get('/attendance', [PageController::class, 'empAttendance'])->name('employee.attendance');
+    Route::post('/attendance/store', [PageController::class, 'empAttendanceStore'])->name('employee.attendance.store');
+
+    Route::get('/launch-management', [PageController::class, 'empLaunchManagement'])->name('employee.launch-management');
+    Route::post('/launch-management/store', [PageController::class, 'empLaunchManagementStore'])->name('employee.launch-management.store');
+    Route::post('/attendance/update/{attendance}', [PageController::class, 'empAttendanceUpdate'])->name('employee.attendance.update');
+
+    Route::get('/leave', [PageController::class, 'empLeaveIndex'])->name('employee.leave-management');
+    Route::post('/leave/store', [PageController::class, 'empLeaveStore'])->name('employee.leave.store');
+    Route::post('/leave/update/{leave}', [PageController::class, 'empLeaveUpdate'])->name('employee.leave.update');
+    Route::get('/leave/destroy/{leave}', [PageController::class, 'empLeaveDestroy'])->name('employee.leave.destroy');
+
+    Route::get('/task-management', [PageController::class, 'empTaskManagement'])->name('employee.task-management');
+    Route::post('/task-management/store', [PageController::class, 'empTaskManagementStore'])->name('employee.task-management.store');
+    Route::post('/task-management/update/{task}', [PageController::class, 'empTaskManagementUpdate'])->name('employee.task-management.update');
+    Route::get('/task-management/destroy/{task}', [PageController::class, 'empTaskManagementDestroy'])->name('employee.task-management.destroy');
+    
 });

@@ -12,6 +12,9 @@
 <!-- MAIN Project CSS file -->
 <link rel="stylesheet" href="{{ asset('storage/assets/css/main.css') }}">
 
+<!-- MAIN Project CSS file -->
+<link rel="stylesheet" href="{{ asset('storage/assets/css/custom.css') }}">
+
 <!-- VENDOR JS -->
 <script src="{{ asset('storage/assets/vendor/jquery-datatable/dataTables.bootstrap4.min.css') }}"></script>
 

@@ -50,8 +50,8 @@
                                         <tbody>
                                             <tr>
                                                 <th class="border-0"  colspan="2" scope="row">
-                                                    @if($company_details->company_logo)
-                                                        <img src="{{ asset('storage/company-policy/'. $company_details->company_logo) }}" alt="company logo" class="img-fluid">
+                                                    @if(!empty($company_details->company_logo))
+                                                        <img src="{{ asset('storage/uploads/company/'. $company_details->company_logo) }}" alt="company logo" class="img-fluid">
                                                     @else
                                                         <img src="{{ asset('storage/assets/images/browser.png') }}" alt="company logo" class="img-fluid w-50">
                                                     @endif
@@ -62,18 +62,26 @@
                                 </td>
                                 <td class="border-0">
                                     <div class="text-right">
-                                        <a href="" class="btn btn-outline-info mb-3 text-right">
+                                        <a data-toggle="modal" data-target="#mdl-edit-company-detail" data- class="btn btn-outline-info mb-3 text-right">
                                             <i class="fa fa-edit"></i>
                                             {{ __('Edit') }}
                                         </a>
+
+                                        @include('admin.company-policy.company-detail-edit-modal')
                                     </div>
                                     <table class="table">
                                         <tbody>
                                             <tr>
                                                 <th scope="row" width="25%">
-                                                    {{ __('Company Name') }}
+                                                    {{ __('Company Name') . ' ' . $company_details->company_logo  }}
                                                 </th>
                                                 <td>{{ __($company_details->company_name) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row" width="25%">
+                                                    {{ __('Company Address') }}
+                                                </th>
+                                                <td>{{ __($company_details->company_address) }}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row" width="25%">

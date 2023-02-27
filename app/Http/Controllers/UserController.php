@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RoleManager;
 use App\Models\User;
+use App\Models\Attendance;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -107,6 +108,11 @@ class UserController extends Controller
             $employee->awards_won       = $request->awards_won;
             $employee->joining_date     = $request->joining_date;
             $employee->save();
+
+            // add employee id to attendance table
+            $attendance = new Attendance();
+            $attendance->employee_id = $employee->id;
+            $attendance->save();
 
             return redirect()->route('administration.index')->with([
                 'success' => 'User has been created with employee details successfully.',

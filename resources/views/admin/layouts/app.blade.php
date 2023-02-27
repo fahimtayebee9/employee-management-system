@@ -1,14 +1,12 @@
 <!doctype html>
 <html lang="en">
 
-<head>
-    <title>HR :: Holidays</title>
+<head>    
     
     @include("admin.includes.header")
 
     @include("admin.includes.css")
 
-    
 </head>
 
 <body data-theme="light" class="font-nunito">

@@ -51,12 +51,14 @@
                                 <i class="fa fa-list"></i>Company Policy
                             </a>
                         </li>
-                        <li><a href="app-events.html"><i class="fa fa-calendar"></i>Launch Sheet</a></li>
+                        <li class="{{ ($active_menu == 'launch_sheet') ? 'active' : '' }}">
+                            <a href="{{ route('admin.launch-sheet.index') }}"><i class="fa fa-calendar"></i>Launch Sheet</a>
+                        </li>
                         <li class="{{ ($active_menu == 'departments' || $active_menu == 'designations' || $active_menu == 'departments' || $active_menu == 'departments') ? 'active' : '' }}">
                             <a href="#Employees" class="has-arrow"><i class="fa fa-users"></i><span>Employees</span></a>
                             <ul>
                                 <li><a href="{{ route('admin.employees.index') }}">All Employees</a></li>
-                                <li><a href="{{ route('admin.employees.index') }}">Leave Requests</a></li>
+                                <li><a href="{{ route('admin.leave.index') }}">Leave Requests</a></li>
                                 <li><a href="{{ route('admin.attendance.index') }}">Attendance</a></li>
                                 <li class="{{ ($active_menu == 'departments') ? 'active' : '' }}"><a href="{{ route('departments.index') }}">Departments</a></li>
                                 <li class="{{ ($active_menu == 'designations') ? 'active' : '' }}"><a href="{{ route('designations.index') }}">Designations</a></li>

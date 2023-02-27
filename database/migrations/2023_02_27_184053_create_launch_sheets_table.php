@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('attendances', function (Blueprint $table) {
+        Schema::create('launch_sheets', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('employee_id');
-            $table->date('date')->nullable();
-            $table->time('in_time')->nullable();
-            $table->time('out_time')->nullable();
-            $table->string('status')->comment('1 = present, 2 = absent, 3 = leave, 4 = holiday, 5 = late, 6 = half day')->default(2);
-            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->date('date');
+            $table->integer('status')->default(0)->comment('0: No, 1: Yes, 2: Wastage');
+            $table->string('reason')->nullable();
+            $table->foreign('employee_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attendances');
+        Schema::dropIfExists('launch_sheets');
     }
 };
