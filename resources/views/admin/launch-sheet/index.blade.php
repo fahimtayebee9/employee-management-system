@@ -119,24 +119,25 @@
                             @endforeach
                             <tr>
                                 <!-- Extra Launch -->
+                                
                                 <td>
                                     <h6 class="mb-0">Extra Launch</h6>
                                 </td>
                                 @for($i = 1; $i <= $total_days; $i++)
                                 <td>
                                     <!-- Ajax Form with select box -->
-                                    <select name="extra-launch" id="extra-launch">
+                                    <select name="extra-launch" class="extra-launch-select" id="extra-launch-{{ $i }}" >
                                         <option value="0"  @if(false) selected @endif>0</option>
-                                        <option value="1"  @if("false" == "selected") selected @endif>1</option>
-                                        <option value="2"  @if("false" == "selected") selected @endif>2</option>
-                                        <option value="3"  @if("false" == "selected") selected @endif>3</option>
-                                        <option value="4"  @if("false" == "selected") selected @endif>4</option>
-                                        <option value="5"  @if("false" == "selected") selected @endif>5</option>
-                                        <option value="6"  @if("false" == "selected") selected @endif>6</option>
-                                        <option value="7"  @if("false" == "selected") selected @endif>7</option>
-                                        <option value="8"  @if("false" == "selected") selected @endif>8</option>
-                                        <option value="9"  @if("false" == "selected") selected @endif>9</option>
-                                        <option value="10" @if("false" == "selected") selected @endif>10</option>
+                                        <option value="1"  @if(false) selected @endif>1</option>
+                                        <option value="2"  @if(false) selected @endif>2</option>
+                                        <option value="3"  @if(false) selected @endif>3</option>
+                                        <option value="4"  @if(false) selected @endif>4</option>
+                                        <option value="5"  @if(false) selected @endif>5</option>
+                                        <option value="6"  @if(false) selected @endif>6</option>
+                                        <option value="7"  @if(false) selected @endif>7</option>
+                                        <option value="8"  @if(false) selected @endif>8</option>
+                                        <option value="9"  @if(false) selected @endif>9</option>
+                                        <option value="10" @if(false) selected @endif>10</option>
                                     </select>
                                 </td>
                                 @endfor

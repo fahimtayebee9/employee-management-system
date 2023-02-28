@@ -64,6 +64,13 @@
                                 <li class="{{ ($active_menu == 'designations') ? 'active' : '' }}"><a href="{{ route('designations.index') }}">Designations</a></li>
                             </ul>
                         </li>
+                        <li class="{{ ($active_menu == '') ? 'active' : '' }}">
+                            <a href="#task-list" class="has-arrow"><i class="fa fa-users"></i><span>Task Management</span></a>
+                            <ul>
+                                <li><a href="{{ route('admin.employees.index') }}">Task Submissions</a></li>
+                                <li><a href="{{ route('admin.tasks.forms.index') }}">Task Forms</a></li>
+                            </ul>
+                        </li>
                         <li>
                             <a href="#Accounts" class="has-arrow"><i class="fa fa-briefcase"></i><span>Accounts</span></a>
                             <ul>

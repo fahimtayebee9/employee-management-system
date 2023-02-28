@@ -19,7 +19,10 @@ return new class extends Migration
             $table->date('date');
             $table->integer('status')->default(0)->comment('0: No, 1: Yes, 2: Wastage');
             $table->string('reason')->nullable();
+            $table->integer('extra_launch')->default(0);
+            $table->unsignedBigInteger('updated_by')->nullable();
             $table->foreign('employee_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

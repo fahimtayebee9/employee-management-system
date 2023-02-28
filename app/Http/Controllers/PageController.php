@@ -4,8 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\CompanyPolicy;
+use App\Models\LaunchSheet;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendMail;
+use App\Models\Employee;
+use App\Models\TaskForm;
+use App\Models\TaskSubmission;
+use Illuminate\Support\Str;
+    
 class PageController extends Controller
 {
     public function empDashboard(){
@@ -40,6 +54,20 @@ class PageController extends Controller
             ]
         );
         return view('employee.pages.launchSheet');
+    }
+
+    public function empLaunchManagementStore(Request $request){
+        $validated_data = Validator::make($request->all(), [
+            'date' => 'required',
+            'employee_id' => 'required',
+        ]);
+
+        $launchInfo = new LaunchSheet();
+        $launchInfo->employee_id = $request->employee_id;
+        $launchInfo->date = $request->date;
+        $launchInfo->status = $request->launch_status;
+        
+        $launchInfo->save();
     }
 
     public function empLeaveIndex(){
@@ -78,5 +106,51 @@ class PageController extends Controller
         $attendance->save();
 
         return redirect()->back()->with('success', 'Attendance added successfully');
+    }
+
+    // EMPLOYEE TASK MANAGEMENT
+    public function empTaskManagementShow(){
+        session(
+            [
+                "page" => "task-management",
+                "page_title" => "Task Management",
+                "page_icon" => "fas fa-tasks",
+            ]
+        );
+        return view('employee.pages.task-index');
+    }
+
+    public function empTaskManagementStore(Request $request){
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'field_1_label' => 'required',
+            'field_1_type' => 'required',
+        ]);
+
+        $taskSubmission = new TaskSubmission();
+        $taskSubmission->employee_id = 6;
+        $taskSubmission->task_form_id = 1;
+        $taskSubmission->field_1 = $request->field_1;
+        $taskSubmission->field_2 = $request->field_2;
+        $taskSubmission->field_3 = $request->field_3;
+        $taskSubmission->field_4 = $request->field_4;
+        $taskSubmission->field_5 = $request->field_5;
+        $taskSubmission->field_6 = $request->field_6;
+        $taskSubmission->field_7 = $request->field_7;
+        $taskSubmission->field_8 = $request->field_8;
+        $taskSubmission->field_9 = $request->field_9;
+        $taskSubmission->field_10 = $request->field_10;
+        $taskSubmission->field_11 = $request->field_11;
+        $taskSubmission->field_12 = $request->field_12;
+        $taskSubmission->field_13 = $request->field_13;
+        $taskSubmission->field_14 = $request->field_14;
+        $taskSubmission->field_15 = $request->field_15;
+        $taskSubmission->save();
+        
+        return redirect()->route('admin.tasks.forms.index')->with([
+            'message' => 'Task Form Created Successfully',
+            'alert-type' => 'success'
+        ]);
     }
 }

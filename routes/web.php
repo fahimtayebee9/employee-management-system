@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\PermissionManagerController;
 use App\Http\Controllers\Admin\EmployeeRoleController;
 use App\Http\Controllers\Admin\LeaveController;
 use App\Http\Controllers\Admin\LaunchSheetController;
+use App\Http\Controllers\Admin\TaskFormController;
+use App\Http\Controllers\Admin\TaskSubmissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
@@ -136,6 +138,26 @@ Route::prefix("admin")->group(function () {
         Route::post('/update/{launchSheet}', [LaunchSheetController::class, 'update'])->name('admin.launch-sheet.update');
         Route::get('/destroy/{launchSheet}', [LaunchSheetController::class, 'destroy'])->name('admin.launch-sheet.destroy');
     });
+
+    // Task Management
+    Route::group(['prefix' => 'tasks'], function () {
+        Route::get('/', [TaskSubmission::class, 'index'])->name('admin.tasks.index');
+        // Route::get('/create', [TaskController::class, 'create'])->name('admin.tasks.create');
+        // Route::post('/store', [TaskController::class, 'store'])->name('admin.tasks.store');
+        // Route::get('/show/{task}', [TaskController::class, 'show'])->name('admin.tasks.show');
+        // Route::get('/edit/{task}', [TaskController::class, 'edit'])->name('admin.tasks.edit');
+        // Route::post('/update/{task}', [TaskController::class, 'update'])->name('admin.tasks.update');
+        // Route::get('/destroy/{task}', [TaskController::class, 'destroy'])->name('admin.tasks.destroy');
+
+        // Task Forms
+        Route::get('/forms', [TaskFormController::class, 'index'])->name('admin.tasks.forms.index');
+        Route::get('/forms/create', [TaskFormController::class, 'create'])->name('admin.tasks.forms.create');
+        Route::post('/forms/store', [TaskFormController::class, 'store'])->name('admin.tasks.forms.store');
+        Route::get('/forms/show/{taskForm}', [TaskFormController::class, 'show'])->name('admin.tasks.forms.show');
+        Route::get('/forms/edit/{taskForm}', [TaskFormController::class, 'edit'])->name('admin.tasks.forms.edit');
+        Route::post('/forms/update/{taskForm}', [TaskFormController::class, 'update'])->name('admin.tasks.forms.update');
+        Route::get('/forms/destroy/{taskForm}', [TaskFormController::class, 'destroy'])->name('admin.tasks.forms.destroy');
+    });
 });
 
 Route::prefix('employee')->group(function(){
@@ -159,5 +181,6 @@ Route::prefix('employee')->group(function(){
     Route::post('/task-management/store', [PageController::class, 'empTaskManagementStore'])->name('employee.task-management.store');
     Route::post('/task-management/update/{task}', [PageController::class, 'empTaskManagementUpdate'])->name('employee.task-management.update');
     Route::get('/task-management/destroy/{task}', [PageController::class, 'empTaskManagementDestroy'])->name('employee.task-management.destroy');
+    Route::get('/task-management/show/{task}', [PageController::class, 'empTaskManagementShow'])->name('employee.task-management.show');
     
 });
