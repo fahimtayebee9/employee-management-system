@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 15, 2023 at 08:11 PM
+-- Generation Time: Feb 28, 2023 at 08:07 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -20,6 +20,30 @@ SET time_zone = "+00:00";
 --
 -- Database: `employee-management-system`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `attendances`
+--
+
+CREATE TABLE `attendances` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `employee_id` bigint(20) UNSIGNED NOT NULL,
+  `date` date DEFAULT NULL,
+  `in_time` time DEFAULT NULL,
+  `out_time` time DEFAULT NULL,
+  `status` varchar(255) NOT NULL DEFAULT '2' COMMENT '1 = present, 2 = absent, 3 = leave, 4 = holiday, 5 = late, 6 = half day',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `attendances`
+--
+
+INSERT INTO `attendances` (`id`, `employee_id`, `date`, `in_time`, `out_time`, `status`, `created_at`, `updated_at`) VALUES
+(9, 6, '2023-02-20', '09:25:00', '05:34:49', '1', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -46,7 +70,7 @@ CREATE TABLE `company_details` (
 --
 
 INSERT INTO `company_details` (`id`, `company_name`, `company_address`, `company_phone`, `company_email`, `company_website`, `company_logo`, `company_favicon`, `company_career_mail`, `created_at`, `updated_at`) VALUES
-(1, 'Tech Rajshahi', '4th Floor, Sheikh Kamal IT Training And Incubation Center, Rajshahi 6201', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(1, 'Tech Rajshahi', '4th Floor, Sheikh Kamal IT Training And Incubation Center, Rajshahi 6201', NULL, NULL, NULL, 'img_1677514309.png', NULL, NULL, NULL, '2023-02-27 10:11:49');
 
 -- --------------------------------------------------------
 
@@ -128,15 +152,31 @@ INSERT INTO `departments` (`id`, `name`, `slug`, `description`, `status`, `creat
 CREATE TABLE `employees` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `employee_id` varchar(255) NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `department_id` bigint(20) UNSIGNED NOT NULL,
-  `designation_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `department_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `designation_id` bigint(20) UNSIGNED DEFAULT NULL,
   `team_lead_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `temporary_role` bigint(20) UNSIGNED DEFAULT NULL,
   `monthly_salary` double(8,2) DEFAULT NULL,
   `awards_won` int(11) DEFAULT NULL,
+  `joining_date` date DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `employees`
+--
+
+INSERT INTO `employees` (`id`, `employee_id`, `user_id`, `department_id`, `designation_id`, `team_lead_id`, `temporary_role`, `monthly_salary`, `awards_won`, `joining_date`, `created_at`, `updated_at`) VALUES
+(1, '1612001', 5, 4, 1, NULL, NULL, NULL, NULL, NULL, '2023-02-17 10:53:06', '2023-02-17 10:53:06'),
+(2, '1612003', 6, 1, 3, NULL, NULL, 25000.00, NULL, NULL, '2023-02-17 10:54:22', '2023-02-17 10:54:22'),
+(3, '1612004', 7, 1, 2, NULL, NULL, 35000.00, NULL, NULL, '2023-02-17 10:56:16', '2023-02-17 10:56:16'),
+(6, '1612008', 10, 3, 8, NULL, NULL, 15000.00, 0, NULL, '2023-02-17 11:21:04', '2023-02-17 11:21:04'),
+(7, '1612009', 11, 3, 8, NULL, NULL, 15000.00, 0, NULL, '2023-02-17 11:25:11', '2023-02-17 11:25:11'),
+(8, '1612010', 12, 1, 3, NULL, NULL, 20000.00, 2, NULL, '2023-02-17 11:26:18', '2023-02-17 11:26:18'),
+(9, '1612011', 13, 2, 3, NULL, NULL, 15000.00, 1, NULL, '2023-02-17 11:27:53', '2023-02-17 11:27:53'),
+(10, '1612012', 14, 3, 7, NULL, NULL, 20000.00, 0, NULL, '2023-02-17 11:31:46', '2023-02-17 11:31:46');
 
 -- --------------------------------------------------------
 
@@ -214,6 +254,48 @@ INSERT INTO `holidays` (`id`, `name`, `date`, `is_weekend`, `description`, `crea
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `launch_sheets`
+--
+
+CREATE TABLE `launch_sheets` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `employee_id` bigint(20) UNSIGNED NOT NULL,
+  `date` date NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 0 COMMENT '0: No, 1: Yes, 2: Wastage',
+  `reason` varchar(255) DEFAULT NULL,
+  `extra_launch` int(11) NOT NULL DEFAULT 0,
+  `updated_by` bigint(20) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `leave_applications`
+--
+
+CREATE TABLE `leave_applications` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `employee_id` bigint(20) UNSIGNED NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `leave_from` date NOT NULL,
+  `leave_to` date NOT NULL,
+  `leave_type` int(11) NOT NULL DEFAULT 3 COMMENT '1 = Full Day Paid Leave, 2 = Half Day Non-Paid Leave, 3 = Full Day Non-Paid Leave',
+  `description` text NOT NULL,
+  `approved_by_astmanager` bigint(20) UNSIGNED DEFAULT NULL,
+  `approved_by_hr` bigint(20) UNSIGNED DEFAULT NULL,
+  `status_by_astmanager` int(11) NOT NULL DEFAULT 1 COMMENT '1 = Pending, 2 = Approved, 3 = Rejected',
+  `status_by_hr` int(11) NOT NULL DEFAULT 1 COMMENT '1 = Pending, 2 = Approved, 3 = Rejected',
+  `status_by_ceo` int(11) NOT NULL DEFAULT 1 COMMENT '1 = Pending, 2 = Approved, 3 = Rejected',
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `migrations`
 --
 
@@ -239,7 +321,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (32, '2023_02_10_191011_create_role_managers_table', 9),
 (33, '2023_02_10_191108_create_permission_managers_table', 9),
 (34, '2014_10_12_000000_create_users_table', 10),
-(35, '2023_02_12_201650_create_employees_table', 11);
+(38, '2023_02_12_201650_create_employees_table', 11),
+(41, '2023_02_17_182123_create_attendances_table', 12),
+(43, '2023_02_19_175336_create_leave_applications_table', 13),
+(45, '2023_02_27_184053_create_launch_sheets_table', 14),
+(48, '2023_02_28_180308_create_task_forms_table', 15),
+(49, '2023_02_28_181301_create_task_submissions_table', 15);
 
 -- --------------------------------------------------------
 
@@ -319,9 +406,9 @@ CREATE TABLE `permission_managers` (
 --
 
 INSERT INTO `permission_managers` (`id`, `role_id`, `employee_read`, `employee_create`, `employee_update`, `employee_delete`, `attendance_read`, `attendance_create`, `attendance_update`, `attendance_delete`, `holiday_read`, `holiday_create`, `holiday_update`, `holiday_delete`, `company_policy_read`, `company_policy_create`, `company_policy_update`, `company_policy_delete`, `launch_read`, `launch_create`, `launch_update`, `launch_delete`, `leaves_read`, `leaves_create`, `leaves_update`, `leaves_delete`, `departments_read`, `departments_create`, `departments_update`, `departments_delete`, `accounts_read`, `accounts_create`, `accounts_update`, `accounts_delete`, `payroll_read`, `payroll_create`, `payroll_update`, `payroll_delete`, `report_read`, `report_create`, `report_update`, `report_delete`, `task_management_read`, `task_management_create`, `task_management_update`, `task_management_delete`, `administration_read`, `administration_create`, `administration_update`, `administration_delete`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, '2023-02-15 12:53:58', '2023-02-15 12:53:58'),
-(2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, '2023-02-15 12:54:09', '2023-02-15 12:54:09'),
-(3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, '2023-02-15 12:54:27', '2023-02-15 12:54:27'),
+(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-02-15 12:53:58', '2023-02-15 12:53:58'),
+(2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-02-15 12:54:09', '2023-02-16 10:31:39'),
+(3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, '2023-02-15 12:54:27', '2023-02-16 10:39:01'),
 (4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL);
 
 -- --------------------------------------------------------
@@ -373,6 +460,89 @@ INSERT INTO `role_managers` (`id`, `name`, `slug`, `description`, `status`, `cre
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `task_forms`
+--
+
+CREATE TABLE `task_forms` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 1 COMMENT '1 for Active, 2 for Inactive',
+  `field_1_label` varchar(255) DEFAULT NULL,
+  `field_1_type` varchar(255) DEFAULT NULL,
+  `field_2_label` varchar(255) DEFAULT NULL,
+  `field_2_type` varchar(255) DEFAULT NULL,
+  `field_3_label` varchar(255) DEFAULT NULL,
+  `field_3_type` varchar(255) DEFAULT NULL,
+  `field_4_label` varchar(255) DEFAULT NULL,
+  `field_4_type` varchar(255) DEFAULT NULL,
+  `field_5_label` varchar(255) DEFAULT NULL,
+  `field_5_type` varchar(255) DEFAULT NULL,
+  `field_6_label` varchar(255) DEFAULT NULL,
+  `field_6_type` varchar(255) DEFAULT NULL,
+  `field_7_label` varchar(255) DEFAULT NULL,
+  `field_7_type` varchar(255) DEFAULT NULL,
+  `field_8_label` varchar(255) DEFAULT NULL,
+  `field_8_type` varchar(255) DEFAULT NULL,
+  `field_9_label` varchar(255) DEFAULT NULL,
+  `field_9_type` varchar(255) DEFAULT NULL,
+  `field_10_label` varchar(255) DEFAULT NULL,
+  `field_10_type` varchar(255) DEFAULT NULL,
+  `field_11_label` varchar(255) DEFAULT NULL,
+  `field_11_type` varchar(255) DEFAULT NULL,
+  `field_12_label` varchar(255) DEFAULT NULL,
+  `field_12_type` varchar(255) DEFAULT NULL,
+  `field_13_label` varchar(255) DEFAULT NULL,
+  `field_13_type` varchar(255) DEFAULT NULL,
+  `field_14_label` varchar(255) DEFAULT NULL,
+  `field_14_type` varchar(255) DEFAULT NULL,
+  `field_15_label` varchar(255) DEFAULT NULL,
+  `field_15_type` varchar(255) DEFAULT NULL,
+  `designation_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `task_forms`
+--
+
+INSERT INTO `task_forms` (`id`, `title`, `slug`, `description`, `status`, `field_1_label`, `field_1_type`, `field_2_label`, `field_2_type`, `field_3_label`, `field_3_type`, `field_4_label`, `field_4_type`, `field_5_label`, `field_5_type`, `field_6_label`, `field_6_type`, `field_7_label`, `field_7_type`, `field_8_label`, `field_8_type`, `field_9_label`, `field_9_type`, `field_10_label`, `field_10_type`, `field_11_label`, `field_11_type`, `field_12_label`, `field_12_type`, `field_13_label`, `field_13_type`, `field_14_label`, `field_14_type`, `field_15_label`, `field_15_type`, `designation_id`, `created_at`, `updated_at`) VALUES
+(1, 'Basic Tasks For Ecommerce Account Manager', 'basic-tasks-for-ecommerce-account-manager', NULL, 1, 'Unread Messages', '1', 'Product preparation and release', '1', 'Advertising Spend', '1', 'Advertising Sales', '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, '2023-02-28 12:57:22', '2023-02-28 12:57:22');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `task_submissions`
+--
+
+CREATE TABLE `task_submissions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `field_1` varchar(255) DEFAULT NULL,
+  `field_2` varchar(255) DEFAULT NULL,
+  `field_3` varchar(255) DEFAULT NULL,
+  `field_4` varchar(255) DEFAULT NULL,
+  `field_5` varchar(255) DEFAULT NULL,
+  `field_6` varchar(255) DEFAULT NULL,
+  `field_7` varchar(255) DEFAULT NULL,
+  `field_8` varchar(255) DEFAULT NULL,
+  `field_9` varchar(255) DEFAULT NULL,
+  `field_10` varchar(255) DEFAULT NULL,
+  `field_11` varchar(255) DEFAULT NULL,
+  `field_12` varchar(255) DEFAULT NULL,
+  `field_13` varchar(255) DEFAULT NULL,
+  `field_14` varchar(255) DEFAULT NULL,
+  `field_15` varchar(255) DEFAULT NULL,
+  `task_form_id` bigint(20) UNSIGNED NOT NULL,
+  `employee_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -397,8 +567,30 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `first_name`, `last_name`, `username`, `email`, `phone`, `blood_group`, `email_verified_at`, `password`, `role_id`, `cspwdbycrt`, `remember_token`, `status`, `image`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1, 'Mahfuz', 'Rahman', '1612000', 'support@techrajshahi.com', 'XXXXXXX', 'A+', NULL, '$2y$10$FreFl0YVMlWvuOJr0i7/M.E7YCHCYypIJEd375FBkjG91tjrrFTsG', 2, 'eyJpdiI6IjYvcTA3WmFnME9KajgwemY1SGxtR2c9PSIsInZhbHVlIjoibEZDVEM1cG90UGplQkpRU0ltaWlDQT09IiwibWFjIjoiODkxOTFjZDNjZjM2ZjE4NjUxYjgzYWVkYjU3MTRjYmUzNjBjOGVlMDNmYzM2N2NmMzZlNDc2OTM0ZWU5YjJmYiIsInRhZyI6IiJ9', NULL, 1, 'img_1676568703.png', NULL, '2023-02-16 11:31:43', '2023-02-16 11:31:43'),
+(5, 'Md. Shahinur', 'Rahman', '1612001', 'support-x@techrajshahi.com', 'XXXXXXX', 'A+', NULL, '$2y$10$Zqavc5Epmo0.qT0WPvJF9O9titNnOStcc2PGrGhSy3yljRRmLK.3a', 3, 'eyJpdiI6IjVDeUpvMm9UZks2ZVV6SitNRFZsT3c9PSIsInZhbHVlIjoibFUwUEM0SllUZjI0aWhFSHYwcyswUT09IiwibWFjIjoiYTkxY2JjNWZiY2ExOTA5YzBkODczYjQyNTBlOTYyYWI0YTBlNTBiMDA2MTEzNzUwNzUxMjZmNGYwNDIwYTIzZSIsInRhZyI6IiJ9', NULL, 1, 'img_1676652786.png', NULL, '2023-02-17 10:53:06', '2023-02-17 10:53:06'),
+(6, 'MD. Gajiur Rahman', 'Shihab', '1612003', 'support-xx@techrajshahi.com', 'XXXXXXX', 'A+', NULL, '$2y$10$6TNlfme.WHRJVtQdGYV1eOwDl52jBd0opapJGZfFYUr5NPq5MVQq6', 5, 'eyJpdiI6IitkWDBYaExFd3kzdXdwVEZ5RTQzc1E9PSIsInZhbHVlIjoiZGptTXh3WmljS3N1aDN5MlNKeHJkUT09IiwibWFjIjoiMTFhYjZmYjMwMzU3MjM1NjJhMDE1M2Y1NThkMTM2YTdiODEzN2Q3ZjU4NDA4NWNhNWIzYjU5NGM4MWFjYTFkMiIsInRhZyI6IiJ9', NULL, 1, 'img_1676652862.png', NULL, '2023-02-17 10:54:22', '2023-02-17 10:54:22'),
+(7, 'Md. Mahfuzur', 'Rahman', '1612004', 'support-xxx@techrajshahi.com', 'XXXXXXX', 'A+', NULL, '$2y$10$yMtu4XUVTkWQL1OcRzprMOrEE6KN8UFOJ4FRVbsaQto.a9byDn2Ta', 3, 'eyJpdiI6ImxrWmh2TWNWb0pWRURSYWpzNkNPQnc9PSIsInZhbHVlIjoidmFEdjVBZGo3NUVCZ3JuQjRUbDdNQT09IiwibWFjIjoiY2Y3Zjg1ZTQxZjM5MGE4OGY3NjRhNGExYzg0OWQzODM2ZTk1Mjc2MGNhZmNkOGUxNjY2MzUwZTA5ZTc4NjkwNSIsInRhZyI6IiJ9', NULL, 1, 'img_1676652976.png', NULL, '2023-02-17 10:56:16', '2023-02-17 10:56:16'),
+(10, 'Mst. Iffat', 'Ara', '1612008', 'support-08@techrajshahi.com', 'XXXXXXX', 'B+', NULL, '$2y$10$OMtubDgGWXL0bzUdL02Q2.r.64vvtzZ9FRDymDw97kx/vDEgENbpi', 5, 'eyJpdiI6ImQ3ZWNZdVVWelVkOERJb0laR2twVkE9PSIsInZhbHVlIjoiWThMV21xSFBEME5mUUcydUdpalFIdz09IiwibWFjIjoiZWM3N2E4OWIyYjM3ZTlmMzlkMWI4N2RmZTUzMjYyYjNkMmZiYzMzNWRmZWY4N2RkMzFmMzM4YzY0ZjdhNTQ1NCIsInRhZyI6IiJ9', NULL, 1, 'img_1676654464.png', NULL, '2023-02-17 11:21:04', '2023-02-17 11:21:04'),
+(11, 'Md. Mejanur Rahman', 'Mejan', '1612009', 'support-09@techrajshahi.com', 'XXXXXXX', 'B+', NULL, '$2y$10$YaQNxPlSzdnEWiEqAbDXROwCsyg8SeBeBa8cncpWFbqNR/9Lroh0W', 5, 'eyJpdiI6Ijhya1grcmNVS1RPak5MdGNmU0tvaEE9PSIsInZhbHVlIjoiVFFRak5nUFRVWVpzMThNOUR4MGQwUT09IiwibWFjIjoiZDMwN2IwMDA5N2M1NzhlODA4ZDQ3MzdhNDViODc5ZWEwNWRiMDk5Njg1MzEwNzRlMzRjNTRiMTExZmM3M2M4MyIsInRhZyI6IiJ9', NULL, 1, 'img_1676654711.png', NULL, '2023-02-17 11:25:11', '2023-02-17 11:25:11'),
+(12, 'Sagin Jahan', 'Jahan', '1612010', 'support-10@techrajshahi.com', 'XXXXXXX', 'B+', NULL, '$2y$10$/J.C67VX3j3cezAcg4ydIeJnUenOweU5BhpT4bI8QCicHtrvWE9Z.', 5, 'eyJpdiI6Imx2M1NZMmxQOVpLK0RCSVdsMWJjV0E9PSIsInZhbHVlIjoiMEdhMHQzNTU1ejkyUVR4OVh5N0RsUT09IiwibWFjIjoiNzYwMjcwYTQ1YzlmYjdlYzIzNjJkZmRjZTk3ZmM5NTcyNzkyYTE0ZWE3YWQwMGU5ODIwZjc5YzIxNTg2Njk5ZCIsInRhZyI6IiJ9', NULL, 1, 'img_1676654778.png', NULL, '2023-02-17 11:26:18', '2023-02-17 11:26:18'),
+(13, 'A.z.m Amanullah', 'Shahariar', '1612011', 'support-11@techrajshahi.com', 'XXXXXXX', 'AB+', NULL, '$2y$10$BwjTZqJ1geUOc9.bSYD9YOAhG9ncrDVAtHN9kYLBc.y1yDe/5Jupm', 5, 'eyJpdiI6InFXS21lVkVmZkczc2xxYVlybmdoRVE9PSIsInZhbHVlIjoiTHNMUGxmbGZNeWZoVEVELzVrK1huUT09IiwibWFjIjoiMzNhNWI5MWRhYzdlYmY3ZTNlMjUxZGUxNmViZjJlOTk2ZWY2MTljMGY1M2EzMjgyOGZlZGQ5ZDJlZWQ0OTBkMyIsInRhZyI6IiJ9', NULL, 1, 'img_1676654873.png', NULL, '2023-02-17 11:27:53', '2023-02-17 11:27:53'),
+(14, 'Md. Iqbal', 'Hossain', '1612012', 'support-12@techrajshahi.com', 'XXXXXXX', 'AB+', NULL, '$2y$10$eBO.n7xUROZopzl9.1Y8GOjO/t9t.cPI01wfxYy9FzJiUCForyllO', 5, 'eyJpdiI6InlndW5leWQvckgwejluMzRLbHFkYlE9PSIsInZhbHVlIjoiT09UcGVBMmJBVkdkc1lXbGprTm01dz09IiwibWFjIjoiNWU5MDM3ZDA0OTJiOWRmYjE1MGRjYjExY2FjMzkwOTE0Njc2N2Q2ZTkxY2M3NWI0M2UzZGRiNGEzM2Q3M2E4YiIsInRhZyI6IiJ9', NULL, 1, 'img_1676655106.png', NULL, '2023-02-17 11:31:46', '2023-02-17 11:31:46');
+
+--
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `attendances`
+--
+ALTER TABLE `attendances`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `attendances_employee_id_foreign` (`employee_id`);
 
 --
 -- Indexes for table `company_details`
@@ -428,7 +620,8 @@ ALTER TABLE `employees`
   ADD KEY `employees_user_id_foreign` (`user_id`),
   ADD KEY `employees_department_id_foreign` (`department_id`),
   ADD KEY `employees_designation_id_foreign` (`designation_id`),
-  ADD KEY `employees_team_lead_id_foreign` (`team_lead_id`);
+  ADD KEY `employees_team_lead_id_foreign` (`team_lead_id`),
+  ADD KEY `employees_temporary_role_foreign` (`temporary_role`);
 
 --
 -- Indexes for table `employee_roles`
@@ -449,6 +642,23 @@ ALTER TABLE `failed_jobs`
 --
 ALTER TABLE `holidays`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `launch_sheets`
+--
+ALTER TABLE `launch_sheets`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `launch_sheets_employee_id_foreign` (`employee_id`),
+  ADD KEY `launch_sheets_updated_by_foreign` (`updated_by`);
+
+--
+-- Indexes for table `leave_applications`
+--
+ALTER TABLE `leave_applications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `leave_applications_employee_id_foreign` (`employee_id`),
+  ADD KEY `leave_applications_approved_by_astmanager_foreign` (`approved_by_astmanager`),
+  ADD KEY `leave_applications_approved_by_hr_foreign` (`approved_by_hr`);
 
 --
 -- Indexes for table `migrations`
@@ -484,6 +694,21 @@ ALTER TABLE `role_managers`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `task_forms`
+--
+ALTER TABLE `task_forms`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `task_forms_designation_id_foreign` (`designation_id`);
+
+--
+-- Indexes for table `task_submissions`
+--
+ALTER TABLE `task_submissions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `task_submissions_task_form_id_foreign` (`task_form_id`),
+  ADD KEY `task_submissions_employee_id_foreign` (`employee_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -495,6 +720,12 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `attendances`
+--
+ALTER TABLE `attendances`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `company_details`
@@ -518,7 +749,7 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `employee_roles`
@@ -539,10 +770,22 @@ ALTER TABLE `holidays`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `launch_sheets`
+--
+ALTER TABLE `launch_sheets`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `leave_applications`
+--
+ALTER TABLE `leave_applications`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `permission_managers`
@@ -563,14 +806,32 @@ ALTER TABLE `role_managers`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `task_forms`
+--
+ALTER TABLE `task_forms`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `task_submissions`
+--
+ALTER TABLE `task_submissions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `attendances`
+--
+ALTER TABLE `attendances`
+  ADD CONSTRAINT `attendances_employee_id_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `employees`
@@ -579,13 +840,42 @@ ALTER TABLE `employees`
   ADD CONSTRAINT `employees_department_id_foreign` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `employees_designation_id_foreign` FOREIGN KEY (`designation_id`) REFERENCES `employee_roles` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `employees_team_lead_id_foreign` FOREIGN KEY (`team_lead_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `employees_temporary_role_foreign` FOREIGN KEY (`temporary_role`) REFERENCES `role_managers` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `employees_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `launch_sheets`
+--
+ALTER TABLE `launch_sheets`
+  ADD CONSTRAINT `launch_sheets_employee_id_foreign` FOREIGN KEY (`employee_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `launch_sheets_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `leave_applications`
+--
+ALTER TABLE `leave_applications`
+  ADD CONSTRAINT `leave_applications_approved_by_astmanager_foreign` FOREIGN KEY (`approved_by_astmanager`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `leave_applications_approved_by_hr_foreign` FOREIGN KEY (`approved_by_hr`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `leave_applications_employee_id_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `permission_managers`
 --
 ALTER TABLE `permission_managers`
   ADD CONSTRAINT `permission_managers_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `role_managers` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `task_forms`
+--
+ALTER TABLE `task_forms`
+  ADD CONSTRAINT `task_forms_designation_id_foreign` FOREIGN KEY (`designation_id`) REFERENCES `employee_roles` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `task_submissions`
+--
+ALTER TABLE `task_submissions`
+  ADD CONSTRAINT `task_submissions_employee_id_foreign` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `task_submissions_task_form_id_foreign` FOREIGN KEY (`task_form_id`) REFERENCES `task_forms` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `users`
