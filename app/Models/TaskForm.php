@@ -46,4 +46,8 @@ class TaskForm extends Model
         'designation_id',
         'status'        ,
     ];
+
+    public function designation(){
+        return $this->belongsTo(EmployeeRole::class, 'designation_id', 'id');
+    }
 }

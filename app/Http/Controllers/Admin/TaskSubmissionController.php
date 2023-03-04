@@ -36,7 +36,7 @@ class TaskSubmissionController extends Controller
      */
     public function store(StoreTaskSubmissionRequest $request)
     {
-        //
+        
     }
 
     /**

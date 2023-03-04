@@ -41,9 +41,15 @@
                         <span>3.45 hrs</span>
                     </div>
                 </div>
-                <div class="punch-btn-section text-center">
-                    <button type="button" class="btn btn-primary punch-btn">Punch Out</button>
-                </div>
+                <form action="{{ route('employee.attendance.store') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="employee_id" value="8">
+                    <input type="hidden" name="date" value="{{ date('Y-m-d') }}">
+                    <input type="hidden" name="status" value="1">
+                    <div class="punch-btn-section text-center">
+                        <button type="submit" class="btn btn-primary punch-btn">Punch Out</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -106,11 +112,34 @@
                 <i class="mdi mdi-tag-text-outline"></i>
             </div>
             <div class="p-4">
-                <h6 class="text-uppercase mb-3">Daily Task Form</h6>
-                <div class="float-right">
-                    <p class="mb-0"><b>Submitted At:</b> {{date('d M, Y H:i A')}}</p>
-                </div>
-                <a href="{{ route('') }}" class="btn btn-outline-primary mb-0">View</a>
+                @php
+                    $date = date('Y-m-d');
+                    $tasks = \App\Models\TaskSubmission::where('employee_id', '8')->get();
+                    $task = null;
+                    foreach($tasks as $task){
+                        if(\Carbon\Carbon::parse($task->created_at)->format('Y-m-d') == $date){
+                            $task = $task;
+                            break;
+                        }
+                    }
+                @endphp
+                <h6 class="text-uppercase mb-0">Daily Task Form</h6>
+                <p class="mb-2 mt-2">
+                    <b>Status: </b> 
+                    <span class="badge {{ isset($task) ? 'badge-success' : 'badge-warning' }}">
+                        {{ isset($task->created_at) ? 'Submitted' : 'Not Submitted' }}
+                    </span>
+                </p>
+                @if(isset($task))
+                <p class="mb-0">
+                    <b>Submitted At:</b> 
+                    {{ isset($task->created_at) ? \Carbon\Carbon::parse($task->created_at)->format('d M, Y') . '(' . \Carbon\Carbon::parse($task->created_at)->format('g:i A') . ')' : 'Not Submitted' }}
+                </p>
+                @endif
+                
+                @if(!isset($task))
+                    <a href="{{ route('employee.task-management.create') }}" class="btn btn-outline-primary mb-0">View Task</a>
+                @endif
             </div>
         </div>
 

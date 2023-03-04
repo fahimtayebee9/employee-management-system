@@ -182,5 +182,6 @@ Route::prefix('employee')->group(function(){
     Route::post('/task-management/update/{task}', [PageController::class, 'empTaskManagementUpdate'])->name('employee.task-management.update');
     Route::get('/task-management/destroy/{task}', [PageController::class, 'empTaskManagementDestroy'])->name('employee.task-management.destroy');
     Route::get('/task-management/show/{task}', [PageController::class, 'empTaskManagementShow'])->name('employee.task-management.show');
+    Route::get('/task-management/create', [PageController::class, 'empTaskManagementCreate'])->name('employee.task-management.create');
     
 });

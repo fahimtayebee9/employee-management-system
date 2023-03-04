@@ -1,0 +1,122 @@
+.punch-det {
+    background-color: #f9f9f9;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    margin: 0 0 20px;
+    padding: 10px 15px;
+}
+
+.punch-det p {
+    color: #727272;
+    font-size: 14px;
+    margin: 0;
+}
+
+.punch-info {
+    margin: 0 0 20px;
+}
+
+.punch-info .punch-hours {
+    background-color: #f9f9f9;
+    border: 5px solid #e3e3e3;
+    font-size: 18px;
+    height: 120px;
+    width: 120px;
+    margin: 0 auto;
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.punch-hours span {
+    display: block;
+    font-size: 14px;
+    margin: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+}
+
+.punch-btn{
+    border-radius: 50px;
+    width: 50%;
+}
+.statistics {
+    margin-top: 20px;
+}
+.stats-box {
+    background-color: #f9f9f9;
+    border: 1px solid #e3e3e3;
+    margin: 0 0 15px;
+    padding: 5px;
+    margin-bottom: 0;
+}
+.att-statistics .stats-info {
+    background-color: #ffffff;
+    border: 1px solid #e5e5e5;
+    text-align: center;
+    border-radius: 4px;
+    margin: 0 0 5px;
+    padding: 15px;
+}
+.stats-info {
+    background-color: #ffffff;
+    border: 1px solid #e5e5e5;
+    text-align: center;
+    border-radius: 4px;
+    margin: 0 0 20px;
+    padding: 15px;
+}
+.att-statistics .stats-info p {
+    font-size: 12px;
+    margin: 0 0 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.att-statistics .progress {
+    height: 6px;
+}
+.card .card-title {
+    color: #1f1f1f;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+.recent-activity .res-activity-list {
+    height: 328px;
+    list-style-type: none;
+    overflow-y: auto;
+    position: relative;
+    margin: 0;
+    padding: 0 0 0 30px;
+    list-style: none;
+}
+.recent-activity .res-activity-list li {
+    margin: 0 0 15px;
+    position: relative;
+}
+.recent-activity .res-activity-list li::marker {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border: 2px solid #ff9b44;
+    z-index: 2;
+    background: #ffffff;
+    border-radius: 100%;
+    margin: 0 0 0 15px;
+    position: absolute;
+    top: 0;
+    left: -45px;
+}
+.recent-activity p {
+    font-size: 13px;
+    margin: 0;
+}
+.recent-activity .res-activity-time {
+    color: #bbb;
+    font-size: 12px;
+}
