@@ -44,7 +44,7 @@
             <div class="tab-pane active" id="hr">
                 <nav id="left-sidebar-nav" class="sidebar-nav">
                     <ul class="metismenu li_animation_delay">
-                        <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                        <li class="{{ ($active_menu == 'dashboard') ? 'active' : '' }}"><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
                         <li class="{{ ($active_menu == 'holidays') ? 'active' : '' }}"><a href="{{ route('holidays.index') }}"><i class="fa fa-list"></i>Holidays</a></li>
                         <li class="{{ ($active_menu == 'company_policy') ? 'active' : '' }}">
                             <a href="{{ route('company-policy.index') }}">
@@ -67,7 +67,7 @@
                         <li class="{{ ($active_menu == '') ? 'active' : '' }}">
                             <a href="#task-list" class="has-arrow"><i class="fa fa-users"></i><span>Task Management</span></a>
                             <ul>
-                                <li><a href="{{ route('admin.employees.index') }}">Task Submissions</a></li>
+                                <li><a href="{{ route('admin.tasks.index') }}">Task Submissions</a></li>
                                 <li><a href="{{ route('admin.tasks.forms.index') }}">Task Forms</a></li>
                             </ul>
                         </li>

@@ -18,9 +18,19 @@
 <script src="{{ asset('storage/employee/assets/plugins/raphael/raphael-min.js') }}"></script>
 <script src="{{ asset('storage/employee/assets/pages/dashboard.js') }}"></script>
 <script src="{{ asset('storage/assets/bundles/sweetalert2@11.js') }}"></script>
+<script src="{{ asset('storage/employee/assets/plugins/select2/select2.min.js') }}"></script>
+<script src="{{ asset('storage/employee/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ asset('storage/employee/assets/plugins/summernote/summernote-bs4.min.js') }}"></script>
 <!-- App js -->
 <script src="{{ asset('storage/employee/assets/js/app.js') }}"></script>
+<script src="{{ asset('storage/employee/assets/js/custom.js') }}"></script>
 
+<script>
+    // Select2
+    $(".select2").select2({
+        width: '100%'
+    });
+</script>
 @php
     $message    = Session::get('message');
     $alert_type = Session::get('type');

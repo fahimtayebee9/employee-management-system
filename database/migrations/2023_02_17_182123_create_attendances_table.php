@@ -17,8 +17,8 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('employee_id');
             $table->date('date')->nullable();
-            $table->time('in_time')->nullable();
-            $table->time('out_time')->nullable();
+            $table->timestamp('in_time')->nullable();
+            $table->timestamp('out_time')->nullable();
             $table->string('status')->comment('1 = present, 2 = absent, 3 = leave, 4 = holiday, 5 = late, 6 = half day')->default(2);
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
             $table->timestamps();

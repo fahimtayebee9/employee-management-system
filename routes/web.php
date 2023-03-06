@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminPageController;
 use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\HolidayController;
 use App\Http\Controllers\Admin\CompanyPolicyController;
@@ -9,7 +10,7 @@ use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\RoleManagerController;
 use App\Http\Controllers\Admin\PermissionManagerController;
 use App\Http\Controllers\Admin\EmployeeRoleController;
-use App\Http\Controllers\Admin\LeaveController;
+use App\Http\Controllers\Admin\LeaveApplicationController;
 use App\Http\Controllers\Admin\LaunchSheetController;
 use App\Http\Controllers\Admin\TaskFormController;
 use App\Http\Controllers\Admin\TaskSubmissionController;
@@ -23,9 +24,7 @@ Route::get('/', function () {
 
 // create route group for admin
 Route::prefix("admin")->group(function () {
-    Route::get('/', function () {
-        return view('admin.layouts.app');
-    })->name('admin.dashboard');
+    Route::get('/',[AdminPageController::class, 'index'])->name('admin.dashboard');
 
     Route::resource("holidays", HolidayController::class, [
         'names' => [
@@ -120,13 +119,13 @@ Route::prefix("admin")->group(function () {
 
     // routes for leave management
     Route::group(['prefix' => 'leave'], function () {
-        Route::get('/', [LeaveController::class, 'index'])->name('admin.leave.index');
-        Route::get('/create', [LeaveController::class, 'create'])->name('admin.leave.create');
-        Route::post('/store', [LeaveController::class, 'store'])->name('admin.leave.store');
-        Route::get('/show/{leave}', [LeaveController::class, 'show'])->name('admin.leave.show');
-        Route::get('/edit/{leave}', [LeaveController::class, 'edit'])->name('admin.leave.edit');
-        Route::post('/update/{leave}', [LeaveController::class, 'update'])->name('admin.leave.update');
-        Route::get('/destroy/{leave}', [LeaveController::class, 'destroy'])->name('admin.leave.destroy');
+        Route::get('/', [LeaveApplicationController::class, 'index'])->name('admin.leave.index');
+        Route::get('/create', [LeaveApplicationController::class, 'create'])->name('admin.leave.create');
+        Route::post('/store', [LeaveApplicationController::class, 'store'])->name('admin.leave.store');
+        Route::get('/show/{leave}', [LeaveApplicationController::class, 'show'])->name('admin.leave.show');
+        Route::get('/edit/{leave}', [LeaveApplicationController::class, 'edit'])->name('admin.leave.edit');
+        Route::post('/update/{leave}', [LeaveApplicationController::class, 'update'])->name('admin.leave.update');
+        Route::get('/destroy/{leave}', [LeaveApplicationController::class, 'destroy'])->name('admin.leave.destroy');
     });
 
     Route::group(['prefix' => 'launch-sheet'], function(){
@@ -141,13 +140,15 @@ Route::prefix("admin")->group(function () {
 
     // Task Management
     Route::group(['prefix' => 'tasks'], function () {
-        Route::get('/', [TaskSubmission::class, 'index'])->name('admin.tasks.index');
+        Route::get('/', [TaskSubmissionController::class, 'index'])->name('admin.tasks.index');
         // Route::get('/create', [TaskController::class, 'create'])->name('admin.tasks.create');
         // Route::post('/store', [TaskController::class, 'store'])->name('admin.tasks.store');
-        // Route::get('/show/{task}', [TaskController::class, 'show'])->name('admin.tasks.show');
+        Route::get('/show/{task}', [TaskSubmissionController::class, 'show'])->name('admin.tasks.show');
         // Route::get('/edit/{task}', [TaskController::class, 'edit'])->name('admin.tasks.edit');
-        // Route::post('/update/{task}', [TaskController::class, 'update'])->name('admin.tasks.update');
-        // Route::get('/destroy/{task}', [TaskController::class, 'destroy'])->name('admin.tasks.destroy');
+        Route::post('/update/{task}', [TaskSubmissionController::class, 'update'])->name('admin.tasks.update');
+        Route::get('/destroy/{task}', [TaskSubmissionController::class, 'destroy'])->name('admin.tasks.destroy');
+        Route::get('/getbydesignation/{designation}', [TaskSubmissionController::class, 'getByDesignation'])->name('admin.tasks.getbydesignation');
+        Route::get('/getbydate/{date}', [TaskSubmissionController::class, 'getByDate'])->name('admin.tasks.getbydate');
 
         // Task Forms
         Route::get('/forms', [TaskFormController::class, 'index'])->name('admin.tasks.forms.index');
@@ -167,15 +168,24 @@ Route::prefix('employee')->group(function(){
     
     Route::get('/attendance', [PageController::class, 'empAttendance'])->name('employee.attendance');
     Route::post('/attendance/store', [PageController::class, 'empAttendanceStore'])->name('employee.attendance.store');
+    Route::post('/attendance/update', [PageController::class, 'empAttendanceUpdate'])->name('employee.attendance.update');
+    Route::get('/attendance/getall/{attendance}', [PageController::class, 'empAttendanceGetAll'])->name('employee.attendance.getall');
+    Route::get('/attendance/status/{status}', [PageController::class, 'empAttendanceGetByStatus'])->name('employee.attendance.bystatus');
+    Route::get('/attendance/getByMonth/{month}', [PageController::class, 'empAttendanceGetByMonth'])->name('employee.attendance.bymonth');
+    Route::get('/attendance/getlaunchsheet/{attendance}', [PageController::class, 'empAttendanceGetLaunchSheet'])->name('employee.attendance.getlaunchsheet');
+
+
+    Route::post('/attendance/break/store', [PageController::class, 'empAttendanceBreakStore'])->name('employee.attendance.break.store');
+    Route::post('/attendance/break/update', [PageController::class, 'empAttendanceBreakUpdate'])->name('employee.attendance.break.update');
 
     Route::get('/launch-management', [PageController::class, 'empLaunchManagement'])->name('employee.launch-management');
     Route::post('/launch-management/store', [PageController::class, 'empLaunchManagementStore'])->name('employee.launch-management.store');
-    Route::post('/attendance/update/{attendance}', [PageController::class, 'empAttendanceUpdate'])->name('employee.attendance.update');
 
     Route::get('/leave', [PageController::class, 'empLeaveIndex'])->name('employee.leave-management');
     Route::post('/leave/store', [PageController::class, 'empLeaveStore'])->name('employee.leave.store');
     Route::post('/leave/update/{leave}', [PageController::class, 'empLeaveUpdate'])->name('employee.leave.update');
     Route::get('/leave/destroy/{leave}', [PageController::class, 'empLeaveDestroy'])->name('employee.leave.destroy');
+    Route::get('/leave/getByType/{type}', [PageController::class, 'empLeaveGetByType'])->name('employee.leave.getbytype');
 
     Route::get('/task-management', [PageController::class, 'empTaskManagement'])->name('employee.task-management');
     Route::post('/task-management/store', [PageController::class, 'empTaskManagementStore'])->name('employee.task-management.store');

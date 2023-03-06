@@ -8,16 +8,11 @@ use App\Models\LaunchSheet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\SendMail;
 use App\Models\Employee;
 use App\Models\TaskForm;
 use App\Models\TaskSubmission;
+use App\Models\AttendanceBreak;
+use App\Models\LeaveApplication;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
     
@@ -42,7 +37,7 @@ class PageController extends Controller
                 "page_icon" => "fas fa-calendar-check",
             ]
         );
-        $attendanceList = Attendance::where('employee_id', 6)->get();
+        $attendanceList = Attendance::where('employee_id', 6)->orderby('id','desc')->get();
         return view('employee.pages.attendance', compact('attendanceList'));
     }
 
@@ -54,21 +49,40 @@ class PageController extends Controller
                 "page_icon" => "fas fa-rocket",
             ]
         );
-        return view('employee.pages.launchSheet');
+        $launchList = LaunchSheet::where('employee_id', 8)->orderby('id','desc')->get();
+        return view('employee.pages.launchSheet', compact('launchList'));
     }
 
     public function empLaunchManagementStore(Request $request){
         $validated_data = Validator::make($request->all(), [
-            'date' => 'required',
             'employee_id' => 'required',
+            'launch_status' => 'required',
         ]);
+
+        if($validated_data->fails()){
+            return redirect()->back()->withErrors([
+                'error' => $validated_data->errors()->all(),
+                'message' => 'Please fill all the fields',
+                'alert-type' => 'error'
+            ]);
+        }
 
         $launchInfo = new LaunchSheet();
         $launchInfo->employee_id = $request->employee_id;
-        $launchInfo->date = $request->date;
+        $launchInfo->attendance_id = $request->attendance_id;
+        $launchInfo->date = Carbon::now();
         $launchInfo->status = $request->launch_status;
-        
         $launchInfo->save();
+
+        return redirect()->back()->with([
+            'message' => 'Launch Request submitted successfully',
+            'alert-type' => 'success'
+        ]);
+    }
+
+    public function empAttendanceGetAll($employee_id){
+        $attendanceList = Attendance::where('employee_id', $employee_id)->get();
+        return response()->json($attendanceList);
     }
 
     public function empLeaveIndex(){
@@ -79,18 +93,54 @@ class PageController extends Controller
                 "page_icon" => "fas fa-calendar-check",
             ]
         );
-        return view('employee.pages.leaves-index');
+        $leaveApplicationList = LeaveApplication::where('employee_id', 8)->get();
+        return view('employee.pages.leaves-index', compact('leaveApplicationList'));
+    }
+
+    public function empLeaveStore(Request $request){
+        $validated_data = Validator::make($request->all(), [
+            'employee_id' => 'required',
+            'leave_type' => 'required',
+            'subject' => 'required',
+            'leave_from' => 'required',
+            'leave_to' => 'required',
+        ]);
+
+        if($validated_data->fails()){
+            return redirect()->back()->withErrors([
+                'error' => $validated_data->errors()->all(),
+                'message' => 'Please fill all the fields',
+                'alert-type' => 'error'
+            ]);
+        }
+
+        $leaveApplication = new LeaveApplication();
+        $leaveApplication->employee_id = $request->employee_id;
+        $leaveApplication->leave_type = $request->leave_type;
+        $leaveApplication->subject = $request->subject;
+        $leaveApplication->leave_from = $request->leave_from;
+        $leaveApplication->leave_to = $request->leave_to;
+        $leaveApplication->description = $request->description;
+        $leaveApplication->save();
+
+        return redirect()->back()->with([
+            'message' => 'Leave Application submitted successfully',
+            'alert-type' => 'success'
+        ]);
+    }
+
+    public function empLeaveGetByType($type){
+        $leaveApplicationList = LeaveApplication::where('employee_id', 8)->where('leave_type', $type)->get();
+        return response()->json($leaveApplicationList);
     }
 
     public function empAttendanceStore(Request $request){
         $validated_data = Validator::make($request->all(), [
-            'date' => 'required',
             'employee_id' => 'required',
-            'in_time' => 'required',
-            'out_time' => 'required',
         ]);
+
         $companyPolicy = CompanyPolicy::first();
-        dd(Carbon::parse($companyPolicy->office_start_time)->addMinutes($companyPolicy->attendance_buffer_time));
+        // dd(Carbon::parse($companyPolicy->office_start_time)->addMinutes($companyPolicy->attendance_buffer_time));
 
         if($validated_data->fails()){
             return redirect()->back()->withErrors([
@@ -102,20 +152,97 @@ class PageController extends Controller
         else{
             $attendance = new Attendance();
             $attendance->employee_id    = $request->employee_id;
-            $attendance->date           = $request->date;
-            $attendance->in_time        = date('Y-m-d H:i:s');
+            $attendance->date           = date('Y-m-d');
+            $attendance->in_time        = Carbon::now();
             if($request->in_time > Carbon::parse($companyPolicy->office_start_time)->addMinutes($companyPolicy->attendance_buffer_time)){
-                $attendance->status = 5;
+                $attendance->status = 6;
             }
-            // check if out_time is less than office end time 
-            // check if in_time is less than out_time
-            $attendance->status         = 1;
-            $attendance->save();
+            else{
+                $attendance->status = 1;
+            }
             $attendance->save();
 
-            return redirect()->back()->with('success', 'Attendance added successfully');
+            return redirect()->back()->with([
+                'message' => 'Attendance marked successfully',
+                'alert-type' => 'success'
+            ]);
         }
     }
+
+    public function empAttendanceUpdate(Request $request){
+        $validated_data = Validator::make($request->all(), [
+            'employee_id' => 'required',
+        ]);
+
+        if($validated_data->fails()){
+            return redirect()->back()->withErrors([
+                'error' => $validated_data->errors()->all(),
+                'message' => 'Please fill all the fields',
+                'alert-type' => 'error'
+            ]);
+        }
+        else{
+            $attendance = Attendance::where('employee_id', $request->employee_id)->where('date', $request->date)->first();
+            
+            $attendance->out_time       = Carbon::now();
+            $attendance->update();
+
+            return redirect()->back()->with([
+                'message' => 'Punched Out successfully',
+                'alert-type' => 'success'
+            ]);
+        }
+    }
+    
+    public function empAttendanceBreakStore(Request $request){
+        $validated_data = Validator::make($request->all(), [
+            'attendance_id' => 'required',
+        ]);
+
+        if($validated_data->fails()){
+            return redirect()->back()->withErrors([
+                'error' => $validated_data->errors()->all(),
+                'message' => 'Please fill all the fields',
+                'alert-type' => 'error'
+            ]);
+        }
+        else{
+            $attendanceBreak = new AttendanceBreak();
+            $attendanceBreak->attendance_id = $request->attendance_id;
+            $attendanceBreak->break_in = Carbon::now();
+            $attendanceBreak->save();
+
+            return redirect()->back()->with([
+                'message' => 'Break Started successfully',
+                'alert-type' => 'success'
+            ]);
+        }
+    }
+
+    public function empAttendanceBreakUpdate(Request $request){
+        $validated_data = Validator::make($request->all(), [
+            'break_id' => 'required',
+        ]);
+
+        if($validated_data->fails()){
+            return redirect()->back()->withErrors([
+                'error' => $validated_data->errors()->all(),
+                'message' => 'Please fill all the fields',
+                'alert-type' => 'error'
+            ]);
+        }
+        else{
+            $attendanceBreak = AttendanceBreak::find($request->break_id);
+            $attendanceBreak->break_out = Carbon::now();
+            $attendanceBreak->update();
+
+            return redirect()->back()->with([
+                'message' => 'Break Ended successfully',
+                'alert-type' => 'success'
+            ]);
+        }
+    }
+
 
     // EMPLOYEE TASK MANAGEMENT
     public function empTaskManagementShow(){
@@ -185,5 +312,22 @@ class PageController extends Controller
         ]);
     }
     
+
+    public function empAttendanceGetByStatus($status){
+        $employee_id = 8;
+        $attendance = Attendance::where('employee_id', 8)->where('status', $status)->get();
+        return response()->json($attendance);
+    }
+
+    public function empAttendanceGetLaunchSheet($atnId){
+        $launch_status = LaunchSheet::where('attendance_id', $atnId)->get()->first()->status;
+        return response()->json(["launch_status" => $launch_status]);
+    }
+
+    public function empAttendanceGetByMonth($month){
+        $employee_id = 8;
+        $attendance = Attendance::where('employee_id', 8)->whereMonth('date', $month)->get();
+        return response()->json($attendance);
+    }
 
 }

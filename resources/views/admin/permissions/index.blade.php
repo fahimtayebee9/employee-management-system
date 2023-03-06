@@ -29,20 +29,20 @@
             <div class="body">
                 <div class="table-responsive">
                     @php
-                    $columns = [
-                    'Employee',
-                    'Attendance',
-                    'Holiday',
-                    'Company Policy',
-                    'Launch',
-                    'Leave',
-                    'Departments',
-                    'Payroll',
-                    'Accounts',
-                    'Task',
-                    'Report',
-                    'Administration',
-                    ];
+                        $columns = [
+                            'Employee',
+                            'Attendance',
+                            'Holiday',
+                            'Company Policy',
+                            'Launch',
+                            'Leave',
+                            'Departments',
+                            'Payroll',
+                            'Accounts',
+                            'Task',
+                            'Report',
+                            'Administration',
+                        ];
                     @endphp
                     @if(!empty($permissions_list))
                     <table class="table table-hover attendance_list">

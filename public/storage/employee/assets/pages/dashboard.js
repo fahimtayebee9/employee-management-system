@@ -175,7 +175,18 @@
             {y: '2013', a: 30, b: 30, c:30}
         ];
         this.createAreaChart('morris-area-chart', 0, 0, $areaData, 'y', ['a', 'b', 'c'], ['Series A', 'Series B', 'Series C'], ['#ec536c', '#5b6be8', '#59ceb5']);
-
+        
+        // get attendance data from server using ajax
+        var $attendanceData = [];
+        $.ajax({
+            url: '/employee/attendance/getall/' + $('#employee_id').val(),
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $attendanceData = data;
+            }
+        });
+        console.log($attendanceData);
         //creating donut chart
         var $donutData = [
             {label: "Margin", value: 20},
@@ -183,7 +194,7 @@
             {label: "Lost", value: 10}, 
         ];
         
-        this.createDonutChart('morris-donut-example', $donutData, [ 'rgba(211, 218, 232,0.8)','rgba(64, 164, 241,0.8)', 'rgba(236, 83, 108,0.8)']);
+        this.createDonutChart('morris-donut-example', $areaData, [ 'rgba(211, 218, 232,0.8)','rgba(64, 164, 241,0.8)', 'rgba(236, 83, 108,0.8)']);
 
         //create line chart
         var $data  = [

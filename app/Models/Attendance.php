@@ -22,4 +22,8 @@ class Attendance extends Model
     {
         return $this->belongsTo(Employee::class, 'employee_id', 'id');
     }
+
+    public function getLaunchSheet(){
+        return $this->belongsTo(LaunchSheet::class, 'attendance_id', 'id'); 
+    }
 }

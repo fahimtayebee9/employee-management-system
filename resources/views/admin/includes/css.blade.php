@@ -8,6 +8,9 @@
 <link rel="stylesheet" href="{{ asset('storage/assets/vendor/chartist-plugin-tooltip/chartist-plugin-tooltip.css') }}">
 <link rel="stylesheet" href="{{ asset('storage/assets/vendor/toastr/toastr.min.css') }}">
 <link rel="stylesheet" href="{{ asset('storage/assets/vendor/dropify/css/dropify.min.css') }}">
+<link href="{{ asset('storage/employee/assets/plugins/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('storage/employee/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+<link href="{{ asset('storage/employee/assets/plugins/summernote/summernote-bs4.css') }}" rel="stylesheet" />
 
 <!-- MAIN Project CSS file -->
 <link rel="stylesheet" href="{{ asset('storage/assets/css/main.css') }}">

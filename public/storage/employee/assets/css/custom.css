@@ -18,12 +18,12 @@
 
 .punch-info .punch-hours {
     background-color: #f9f9f9;
-    border: 5px solid #e3e3e3;
+    border: 3px solid #c4c0ff;
     font-size: 18px;
-    height: 120px;
-    width: 120px;
+    height: 100px;
+    width: 100%;
     margin: 0 auto;
-    border-radius: 50%;
+    border-radius: 5px;
     justify-content: center;
     align-items: center;
     display: flex;
@@ -49,11 +49,31 @@
 }
 .stats-box {
     background-color: #f9f9f9;
-    border: 1px solid #e3e3e3;
+    border: 2px solid #e3e3e3;
     margin: 0 0 15px;
     padding: 5px;
     margin-bottom: 0;
+    border-radius: 4px;
 }
+
+.stats-box-success {
+    background-color: #cdffe4;
+    border: 2px solid #76ffb6;
+    color: #006d00;
+}
+
+.stats-box-danger {
+    background-color: #ffe4e4;
+    border: 2px solid #ff7676;
+    color: #6d0000;
+}
+
+.stats-box-warning {
+    background-color: #fff4e4;
+    border: 2px solid #ffd76b;
+    color: #dba100;
+}
+
 .att-statistics .stats-info {
     background-color: #ffffff;
     border: 1px solid #e5e5e5;

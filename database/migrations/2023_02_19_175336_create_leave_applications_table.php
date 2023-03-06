@@ -25,7 +25,6 @@ return new class extends Migration
             $table->unsignedBigInteger('approved_by_hr')->nullable();
             $table->integer('status_by_astmanager')->default(1)->comment('1 = Pending, 2 = Approved, 3 = Rejected');
             $table->integer('status_by_hr')->default(1)->comment('1 = Pending, 2 = Approved, 3 = Rejected');
-            $table->integer('status_by_ceo')->default(1)->comment('1 = Pending, 2 = Approved, 3 = Rejected');
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
             $table->foreign('approved_by_astmanager')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('approved_by_hr')->references('id')->on('users')->onDelete('cascade');

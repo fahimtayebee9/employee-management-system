@@ -16,8 +16,18 @@ class LeaveApplicationController extends Controller
      */
     public function index()
     {
-        $leaveApplications = LeaveApplication::all();
-        return view('admin.leave.index', compact('leaveApplications'));
+        session([
+            'menu_active' => 'leave-applications',
+            'page_title' => 'Leave Applications',
+            'page_title_description' => 'Overview of the system',
+            'breadcrumb' => [
+                'Home' => route('admin.dashboard'),
+                'Leave Applications' => '',
+            ],
+        ]);
+
+        $leaveApplicationsList = LeaveApplication::all();
+        return view('admin.leave-applications.index', compact('leaveApplicationsList'));
     }
 
     /**

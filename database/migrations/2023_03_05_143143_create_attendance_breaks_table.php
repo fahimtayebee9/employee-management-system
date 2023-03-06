@@ -13,14 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('launch_sheets', function (Blueprint $table) {
+        Schema::create('attendance_breaks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('employee_id');
             $table->unsignedBigInteger('attendance_id');
-            $table->timestamp('date');
-            $table->integer('status')->default(0)->comment('0: No, 1: Yes, 2: Wastage');
-            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
-            $table->foreign('attendance_id')->references('id')->on('attendances')->onDelete('cascade');
+            $table->timestamp('break_in')->nullable();
+            $table->timestamp('break_out')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('launch_sheets');
+        Schema::dropIfExists('attendance_breaks');
     }
 };

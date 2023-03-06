@@ -13,14 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('launch_sheets', function (Blueprint $table) {
+        Schema::create('extra_launches', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('employee_id');
-            $table->unsignedBigInteger('attendance_id');
             $table->timestamp('date');
-            $table->integer('status')->default(0)->comment('0: No, 1: Yes, 2: Wastage');
-            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
-            $table->foreign('attendance_id')->references('id')->on('attendances')->onDelete('cascade');
+            $table->integer('count')->default(0);
             $table->timestamps();
         });
     }
@@ -32,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('launch_sheets');
+        Schema::dropIfExists('extra_launches');
     }
 };

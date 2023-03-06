@@ -15,16 +15,19 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach($launchList as $launch)
                         <tr>
-                            <td>1</td>
-                            <td>19 Feb 2019</td>
-                            <td>10 AM</td>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ \Carbon\Carbon::parse($launch->date)->format('d M, Y') }}</td>
+                            <td>
+                                @if($launch->status == 1)
+                                <span class="badge badge-success">Active</span>
+                                @else
+                                <span class="badge badge-danger">Inactive</span>
+                                @endif
+                            </td>
                         </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>20 Feb 2019</td>
-                            <td>10 AM</td>
-                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
