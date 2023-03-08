@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Crypt;
 use Image;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AttendanceController extends Controller
 {
@@ -21,19 +22,24 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-        session(
-            [
-                'menu_active' => 'attendance',
-                'page_title' => 'Attendance Management',
-                'page_title_description' => 'Manage Attendance & Details',
-                'breadcrumb' => [
-                    'Home' => route('admin.dashboard'),
-                    'Attendance' => route('admin.attendance.index'),
-                ],
-            ]
-        );
-        $employees = Employee::all();
-        return view('admin.attendances.index', compact('employees'));
+        if(Auth::check() == false){
+            return redirect()->route('login');
+        }
+        else{
+            session(
+                [
+                    'menu_active' => 'attendance',
+                    'page_title' => 'Attendance Management',
+                    'page_title_description' => 'Manage Attendance & Details',
+                    'breadcrumb' => [
+                        'Home' => route('admin.dashboard'),
+                        'Attendance' => route('admin.attendance.index'),
+                    ],
+                ]
+            );
+            $employees = Employee::all();
+            return view('admin.attendances.index', compact('employees'));
+        }
     }
 
     /**

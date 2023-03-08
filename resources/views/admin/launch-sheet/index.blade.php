@@ -24,12 +24,26 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="header">
-                <div class="table-header-actions row">
+                <div class="table-header-actions row justify-content-between">
                     <div class="col-md-6">
                         <h2>{{ session()->get('page_title_description') }}</h2>
                     </div>
-                    <div class="col-md-6 justify-content-end d-flex">
-
+                    <div class="col-md-3">
+                        <select class="form-control custom-select select2-hidden-accessible w-100" name="month-flt" id="month-filter">
+                            <option>Select Month</option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -89,22 +103,14 @@
                                         @elseif(!empty($ldate_sheet))
                                             <td class="text-center p-1">
                                                 @if($ldate_sheet->status == 1)
-                                                    <a href="javascript:void(0);" class="m-0 badge badge-success" data-toggle="modal" data-target="#attendance_info_{{ $item->employee_id }}">
-                                                        <i class="fa fa-check text-success"></i> Y
-                                                    </a> 
+                                                <span class="badge badge-success">
+                                                    <i class="fa fa-check text-success"></i> Y
+                                                </span>
                                                 @elseif($ldate_sheet->status == 0)
-                                                <a href="javascript:void(0);"  class="badge badge-danger" data-toggle="modal" data-target="#attendance_info_{{ $item->employee_id }}">
-                                                    <i class="fa fa-close text-danger"></i> N
-                                                </a>
-                                                @elseif($ldate_sheet->status == 2)
                                                 <span class="badge badge-danger">
-                                                    <a href="javascript:void(0);"  data-toggle="modal" data-target="#attendance_info_{{ $item->employee_id }}">
-                                                        <i class="fa fa-close text-danger"></i> W
-                                                    </a>
+                                                    <i class="fa fa-close text-danger"></i> N
                                                 </span>
                                                 @endif
-
-                                                @include('admin.includes.modals.mdl-attendance-info')
                                             </td>
                                         @endif
                                     @endfor
@@ -148,13 +154,17 @@
                                 </td>
                                 @for($i = 1; $i <= $total_days; $i++)
                                     @php
-                                        // check if attendance is marked for this date
-                                        $ldate_sheet = \App\Models\LaunchSheet::where('date', $date)->where('status', 1)->get();
-                                        
+                                        $extLaunchInfo = \App\Models\ExtraLaunch::whereDate('date', \Carbon\Carbon::create(date('Y'), date('m'), $i))->first();
                                     @endphp
+                                    @if(!empty($extLaunchInfo))
+                                        <td class="text-center p-1">
+                                            <b>{{ $extLaunchInfo->total_launch }}</b>
+                                        </td>
+                                    @else
                                     <td class="text-center p-1">
-                                        <span class="badge badge-success">{{ count($ldate_sheet) }}</span>
+                                        <b>0</b>
                                     </td>
+                                    @endif
                                 @endfor
                                 <!-- Summary of attendance -->
                             </tr>

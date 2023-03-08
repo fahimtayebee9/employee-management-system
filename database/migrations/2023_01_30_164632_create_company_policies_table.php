@@ -41,6 +41,7 @@ return new class extends Migration
             $table->string('festival_bonus_rule_value_type')->nullable();
             $table->string('weekly_holiday')->nullable();
             $table->integer('status')->default(1)->comment('1=active, 0=inactive');
+            $table->integer('launch_price_per_person')->default(0);
             $table->timestamps();
         });
     }

@@ -6,14 +6,14 @@
         </div>
 
         <div class="navbar-right">
-            <form id="navbar-search" class="navbar-form search-form">
+            <!-- <form id="navbar-search" class="navbar-form search-form">
                 <input value="" class="form-control" placeholder="Search here..." type="text">
                 <button type="button" class="btn btn-default"><i class="icon-magnifier"></i></button>
-            </form>
+            </form> -->
 
             <div id="navbar-menu">
                 <ul class="nav navbar-nav">
-                    <li class="dropdown">
+                    <!-- <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle icon-menu" data-toggle="dropdown">
                             <i class="fa fa-bell"></i>
                             <span class="notification-dot"></span>
@@ -74,9 +74,16 @@
                             </li>
                             <li class="footer"><a href="javascript:void(0);" class="more">See all notifications</a></li>
                         </ul>
-                    </li>
+                    </li> -->
                     <li>
-                        <a href="page-login.html" class="icon-menu"><i class="fa fa-power-off"></i></a>
+                        
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+
+                            <x-dropdown-link style="padding: 0px;" :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                                <i class="fa fa-power-off"></i>
+                            </x-dropdown-link>
+                        </form>
                     </li>
                 </ul>
             </div>

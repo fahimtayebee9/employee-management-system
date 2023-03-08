@@ -34,6 +34,7 @@
                     <thead>
                         <tr>
                             <th width="5%">#</th>
+                            <th width="10%">Application ID</th>
                             <th width="15%">Date </th>
                             <th>Subject</th>
                             <th width="10%">Status</th>
@@ -45,6 +46,7 @@
                         @foreach($leaveApplicationList as $leave)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
+                            <td>{{ $leave->leave_id }}</td>
                             <td>
                                 <b>{{ Carbon\Carbon::parse($leave->leave_from)->format('d M, Y') }}</b> 
                                 to 

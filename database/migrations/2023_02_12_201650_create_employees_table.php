@@ -24,6 +24,7 @@ return new class extends Migration
             $table->float('monthly_salary')->nullable();
             $table->integer('awards_won')->nullable();
             $table->date('joining_date')->nullable();
+            $table->integer('paid_leaves_applicable')->default(0)->comment('0 = No, 1 = Yes');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
             $table->foreign('designation_id')->references('id')->on('employee_roles')->onDelete('cascade');

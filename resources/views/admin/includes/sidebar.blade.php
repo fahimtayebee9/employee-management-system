@@ -2,39 +2,36 @@
     <button type="button" class="btn-toggle-offcanvas"><i class="fa fa-arrow-left"></i></button>
     <div class="sidebar-scroll">
         <div class="user-account">
-            <img src="{{ asset('storage/assets/images/user.png') }}" class="rounded-circle user-photo" alt="User Profile Picture">
+            @if(Auth::user()->image)
+                <img src="{{ asset('storage/uploads/users/'. Auth::user()->image) }}" class="rounded-circle user-photo" alt="User Profile Picture">
+            @else
+                <img src="{{ asset('storage/assets/images/user.png') }}" class="rounded-circle user-photo" alt="User Profile Picture">
+            @endif
             <div class="dropdown">
                 <span>Welcome,</span>
-                <a href="javascript:void(0);" class="dropdown-toggle user-name" data-toggle="dropdown"><strong>Pamela Petrus</strong></a>
+                <a href="javascript:void(0);" class="dropdown-toggle user-name" data-toggle="dropdown"><strong>{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}</strong></a>
                 <ul class="dropdown-menu dropdown-menu-right account">
-                    <li><a href="page-profile2.html"><i class="icon-user"></i>My Profile</a></li>
-                    <li><a href="app-inbox.html"><i class="icon-envelope-open"></i>Messages</a></li>
-                    <li><a href="javascript:void(0);"><i class="icon-settings"></i>Settings</a></li>
+                    <li>
+                        <a href="{{route('admin.profile')}}">
+                            <i class="icon-user"></i>My Profile
+                        </a>
+                    </li>
                     <li class="divider"></li>
-                    <li><a href="page-login.html"><i class="icon-power"></i>Logout</a></li>
+                    <li class="btn-logout-frm">
+                        <!-- Authentication -->
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+
+                            <x-dropdown-link style="padding: 0px;" :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                                <i class="icon-power"></i> {{ __('Log Out') }}
+                            </x-dropdown-link>
+                        </form>
+                    </li>
                 </ul>
             </div>
             <hr>
-            <!-- <ul class="row list-unstyled">
-                <li class="col-4">
-                    <small>Sales</small>
-                    <h6>561</h6>
-                </li>
-                <li class="col-4">
-                    <small>Order</small>
-                    <h6>920</h6>
-                </li>
-                <li class="col-4">
-                    <small>Revenue</small>
-                    <h6>$23B</h6>
-                </li>
-            </ul> -->
         </div>
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs">
-            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#hr">HR</a></li>
-        </ul>
-        
+
         @php
             $active_menu = session()->get('menu_active');
         @endphp
@@ -44,13 +41,10 @@
             <div class="tab-pane active" id="hr">
                 <nav id="left-sidebar-nav" class="sidebar-nav">
                     <ul class="metismenu li_animation_delay">
-                        <li class="{{ ($active_menu == 'dashboard') ? 'active' : '' }}"><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
-                        <li class="{{ ($active_menu == 'holidays') ? 'active' : '' }}"><a href="{{ route('holidays.index') }}"><i class="fa fa-list"></i>Holidays</a></li>
-                        <li class="{{ ($active_menu == 'company_policy') ? 'active' : '' }}">
-                            <a href="{{ route('company-policy.index') }}">
-                                <i class="fa fa-list"></i>Company Policy
-                            </a>
+                        <li class="{{ ($active_menu == 'dashboard') ? 'active' : '' }}">
+                            <a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i><span>Dashboard</span></a>
                         </li>
+                        <li class="{{ ($active_menu == 'holidays') ? 'active' : '' }}"><a href="{{ route('holidays.index') }}"><i class="fa fa-list"></i>Holidays</a></li>
                         <li class="{{ ($active_menu == 'launch_sheet') ? 'active' : '' }}">
                             <a href="{{ route('admin.launch-sheet.index') }}"><i class="fa fa-calendar"></i>Launch Sheet</a>
                         </li>
@@ -72,14 +66,6 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="#Accounts" class="has-arrow"><i class="fa fa-briefcase"></i><span>Accounts</span></a>
-                            <ul>
-                                <li><a href="acc-payments.html">Payments</a></li>
-                                <li><a href="acc-expenses.html">Expenses</a></li>
-                                <li><a href="acc-invoices.html">Invoices</a></li>
-                            </ul>
-                        </li>
-                        <li>
                             <a href="#Payroll" class="has-arrow"><i class="fa fa-credit-card"></i><span>Payroll</span></a>
                             <ul>
                                 <li><a href="payroll-payslip.html">Payslip</a></li>
@@ -95,33 +81,34 @@
                                 <li><a href="report-invoice.html">Attendance Report</a></li>
                             </ul>
                         </li>
-                        <li>
+                        <li class="{{ ($active_menu == 'administrative_users' || $active_menu == 'role_managers' || $active_menu == 'permission_managers' || $active_menu == 'company_policy') ? 
+                                'active' : '' }}">
                             <a href="#administrative" class="has-arrow"><i class="fa fa-user"></i><span>Administration</span></a>
                             <ul>
-                                <li class="{{ ($active_menu == 'role_managers') ? 'active' : '' }}">
+                                <li class="{{ ($active_menu == 'administrative_users') ? 'active' : '' }}">
                                     <a href="{{ route('administration.index') }}">Users</a>
                                 </li>
                                 <li class="{{ ($active_menu == 'role_managers') ? 'active' : '' }}">
                                     <a href="{{ route('roles.index') }}">Role Manager</a>
                                 </li>
-                                <li class="{{ ($active_menu == 'role_managers') ? 'active' : '' }}">
+                                <li class="{{ ($active_menu == 'permission_managers') ? 'active' : '' }}">
                                     <a href="{{ route('permissions.index') }}">Permission Manager</a>
+                                </li>
+                                <li class="{{ ($active_menu == 'company_policy') ? 'active' : '' }}">
+                                    <a href="{{ route('company-policy.index') }}">
+                                        Company Policy
+                                    </a>
                                 </li>
                             </ul>
                         </li>
-                        <!-- <li>
-                            <a href="#Authentication" class="has-arrow"><i class="fa fa-lock"></i><span>Authentication</span></a>
+                        <li>
+                            <a href="#Accounts" class="has-arrow"><i class="fa fa-briefcase"></i><span>Accounts</span></a>
                             <ul>
-                                <li><a href="page-login.html">Login</a></li>
-                                <li><a href="page-register.html">Register</a></li>
-                                <li><a href="page-lockscreen.html">Lockscreen</a></li>
-                                <li><a href="page-forgot-password.html">Forgot Password</a></li>
-                                <li><a href="page-404.html">Page 404</a></li>
-                                <li><a href="page-403.html">Page 403</a></li>
-                                <li><a href="page-500.html">Page 500</a></li>
-                                <li><a href="page-503.html">Page 503</a></li>
+                                <li><a href="acc-payments.html">Payments</a></li>
+                                <li><a href="acc-expenses.html">Expenses</a></li>
+                                <li><a href="acc-invoices.html">Invoices</a></li>
                             </ul>
-                        </li> -->
+                        </li>
                     </ul>
                 </nav>
             </div>

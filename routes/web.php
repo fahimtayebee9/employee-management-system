@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminPageController;
 use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\HolidayController;
@@ -16,15 +18,33 @@ use App\Http\Controllers\Admin\TaskFormController;
 use App\Http\Controllers\Admin\TaskSubmissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PageController;
-use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// });
+
 // create route group for admin
 Route::prefix("admin")->group(function () {
-    Route::get('/',[AdminPageController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard',[AdminPageController::class, 'index'])->name('admin.dashboard');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('admin.profile');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::resource("holidays", HolidayController::class, [
         'names' => [
@@ -54,8 +74,6 @@ Route::prefix("admin")->group(function () {
     Route::group(['prefix' => 'company-details'], function () {
         Route::post('/update/{companyDetail}', [CompanyDetailController::class, 'update'])->name('company-details.update');
     });
-
-
 
     // Administration routes
     Route::group(['prefix' => 'administration'], function () {
@@ -159,7 +177,7 @@ Route::prefix("admin")->group(function () {
         Route::post('/forms/update/{taskForm}', [TaskFormController::class, 'update'])->name('admin.tasks.forms.update');
         Route::get('/forms/destroy/{taskForm}', [TaskFormController::class, 'destroy'])->name('admin.tasks.forms.destroy');
     });
-});
+})->middleware('auth');
 
 Route::prefix('employee')->group(function(){
     Route::get('/dashboard', [PageController::class, 'empDashboard'])->name('employee.dashboard');
@@ -194,4 +212,6 @@ Route::prefix('employee')->group(function(){
     Route::get('/task-management/show/{task}', [PageController::class, 'empTaskManagementShow'])->name('employee.task-management.show');
     Route::get('/task-management/create', [PageController::class, 'empTaskManagementCreate'])->name('employee.task-management.create');
     
-});
+})->middleware(['auth']);
+
+require __DIR__.'/auth.php';

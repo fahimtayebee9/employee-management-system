@@ -73,7 +73,7 @@
                                         <tbody>
                                             <tr>
                                                 <th scope="row" width="25%">
-                                                    {{ __('Company Name') . ' ' . $company_details->company_logo  }}
+                                                    {{ __('Company Name') }}
                                                 </th>
                                                 <td>{{ __($company_details->company_name) }}</td>
                                             </tr>
@@ -158,6 +158,10 @@
                                                     @elseif($company_policy->late_attendance_rule == 1)
                                                         {{ __('Count As Full Day') }}
                                                     @endif
+                                                    <!-- edit button -->
+                                                    <a href="" data-toggle="modal" data-target="#edit-policy-custom" class="ml-3 btn btn-sm btn-outline-warning">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -176,6 +180,10 @@
                                                     @elseif($company_policy->half_day_absent_rule == 2)
                                                         {{ __('Deduct Salary By Fixed Amount') }}
                                                     @endif
+                                                    <!-- edit button -->
+                                                    <a href="" data-toggle="modal" data-target="#edit-policy-custom" class="ml-3 btn btn-sm btn-outline-warning">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -196,6 +204,10 @@
                                                     @elseif($company_policy->full_day_absent_rule == 2)
                                                         {{ __('Deduct Salary By Fixed Amount') }}
                                                     @endif
+                                                    <!-- edit button -->
+                                                    <a href="" data-toggle="modal" data-target="#edit-policy-custom" class="ml-3 btn btn-sm btn-outline-warning">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -218,6 +230,10 @@
                                                     @elseif($company_policy->paid_leave_rule == 12)
                                                         {{ __('Applicable after 12 months') }}
                                                     @endif
+                                                    <!-- edit button -->
+                                                    <a href="" data-toggle="modal" data-target="#edit-policy-custom" class="ml-3 btn btn-sm btn-outline-warning">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -238,6 +254,10 @@
                                                     @elseif($company_policy->unpaid_leave_rule == 2)
                                                         {{ __('Count As Half Day') }}
                                                     @endif
+                                                    <!-- edit button -->
+                                                    <a href="" data-toggle="modal" data-target="#edit-policy-custom" class="ml-3 btn btn-sm btn-outline-warning">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -253,6 +273,10 @@
                                                 <td class="border-0">
                                                     {{ __($company_policy->attendance_buffer_time . ' mins')
                                                          . " [" . \Carbon\Carbon::createFromFormat('H:i:s',$company_policy->office_start_time)->format('h:i A') . " - " . \Carbon\Carbon::createFromFormat('H:i:s',$company_policy->office_start_time)->addMinute($company_policy->attendance_buffer_time)->format('h:i A') . "]" }}
+                                                    <!-- edit button -->
+                                                    <a href="" data-toggle="modal" data-target="#edit-policy-custom" class="ml-3 btn btn-sm btn-outline-warning">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -274,6 +298,10 @@
                                                     @elseif($company_policy->attendance_bonus_rule_value_type == 2)
                                                         {{ __('Fixed Amount') . " (" . $company_policy->attendance_bonus_rule_value . " tk)" }}
                                                     @endif
+                                                    <!-- edit button -->
+                                                    <a href="" data-toggle="modal" data-target="#edit-policy-custom" class="ml-3 btn btn-sm btn-outline-warning">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -292,6 +320,10 @@
                                                     @elseif($company_policy->overtime_rule == 2)
                                                         {{ __('Applicable') . " (" . $company_policy->overtime_rule_value . " tk)" }}
                                                     @endif
+                                                    <!-- edit button -->
+                                                    <a href="" data-toggle="modal" data-target="#edit-policy-custom" class="ml-3 btn btn-sm btn-outline-warning">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -316,6 +348,10 @@
                                                             {{ __('Deduct From Salary')}}
                                                         @endif
                                                     @endif
+                                                    <!-- edit button -->
+                                                    <a href="" data-toggle="modal" data-target="#edit-policy-custom" class="ml-3 btn btn-sm btn-outline-warning">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -338,6 +374,10 @@
                                                             {{ __('Fixed Amount') . " (" . $company_policy->festival_bonus_rule_value . " tk)"}}
                                                         @endif
                                                     @endif
+                                                    <!-- edit button -->
+                                                    <a href="" data-toggle="modal" data-target="#edit-policy-custom" class="ml-3 btn btn-sm btn-outline-warning">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </tbody>

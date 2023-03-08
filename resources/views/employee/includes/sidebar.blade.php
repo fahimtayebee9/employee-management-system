@@ -48,9 +48,9 @@
                     </a>
                 </li>
 
-                <li>
+                <!-- <li>
                     <a href="calendar.html" class="waves-effect waves-light"><i class="mdi mdi-calendar-clock"></i><span> Calendar </span></a>
-                </li>
+                </li> -->
 
             </ul>
         </div>

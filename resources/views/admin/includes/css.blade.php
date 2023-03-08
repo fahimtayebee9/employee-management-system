@@ -23,11 +23,10 @@
 
 
 <style>
-    /* .dataTable{
-        max-width: 120px;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        word-break: break-all;
-        overflow: hidden;
-    } */
+    .btn-logout-frm form a{
+        padding: 10px!important;
+    }
+    .account a:hover, .account a:hover i{
+        color: #fff!important;
+    }
 </style>

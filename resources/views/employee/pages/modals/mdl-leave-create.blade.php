@@ -10,7 +10,7 @@
             <form action="{{ route('employee.leave.store') }}" method="post">
                 @csrf
                 <div class="modal-body">
-                    <input type="hidden" name="employee_id" value="8">
+                    <input type="hidden" name="employee_id" value="{{ $employee->id }}">
                     <div class="form-group">
                         <label for="name">Subject</label>
                         <input type="text" name="subject" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>

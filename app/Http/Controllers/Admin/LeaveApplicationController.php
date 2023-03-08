@@ -6,6 +6,7 @@ use App\Models\LeaveApplication;
 use App\Http\Requests\StoreLeaveApplicationRequest;
 use App\Http\Requests\UpdateLeaveApplicationRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class LeaveApplicationController extends Controller
 {
@@ -16,18 +17,23 @@ class LeaveApplicationController extends Controller
      */
     public function index()
     {
-        session([
-            'menu_active' => 'leave-applications',
-            'page_title' => 'Leave Applications',
-            'page_title_description' => 'Overview of the system',
-            'breadcrumb' => [
-                'Home' => route('admin.dashboard'),
-                'Leave Applications' => '',
-            ],
-        ]);
+        if(Auth::check() == false){
+            return redirect()->route('login');
+        }
+        else{
+            session([
+                'menu_active' => 'leave-applications',
+                'page_title' => 'Leave Applications',
+                'page_title_description' => 'Overview of the system',
+                'breadcrumb' => [
+                    'Home' => route('admin.dashboard'),
+                    'Leave Applications' => '',
+                ],
+            ]);
 
-        $leaveApplicationsList = LeaveApplication::all();
-        return view('admin.leave-applications.index', compact('leaveApplicationsList'));
+            $leaveApplicationsList = LeaveApplication::all();
+            return view('admin.leave-applications.index', compact('leaveApplicationsList'));
+        }
     }
 
     /**
@@ -59,13 +65,18 @@ class LeaveApplicationController extends Controller
      */
     public function show(LeaveApplication $leaveApplication)
     {
-        $leaveApplication = LeaveApplication::find($leaveApplication->id);
-
-        if(!empty($leaveApplication)) {
-            return view('admin.leave.show', compact('leaveApplication'));
+        if(Auth::check() == false){
+            return redirect()->route('login');
         }
+        else{
+            $leaveApplication = LeaveApplication::find($leaveApplication->id);
 
-        return redirect()->route('admin.leave.index');
+            if(!empty($leaveApplication)) {
+                return view('admin.leave.show', compact('leaveApplication'));
+            }
+
+            return redirect()->route('admin.leave.index');
+        }
     }
 
     /**

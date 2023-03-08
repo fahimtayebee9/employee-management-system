@@ -8,6 +8,8 @@ use App\Http\Requests\UpdateCompanyPolicyRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyPolicyController extends Controller
 {
@@ -18,25 +20,35 @@ class CompanyPolicyController extends Controller
      */
     public function index()
     {
-        session(
-            [
-                'menu_active' => 'company_policy',
-                'page_title' => 'Company Policy',
-                'page_title_description' => 'Manage Company Policy & Details',
-                'breadcrumb' => [
-                    'Home' => route('admin.dashboard'),
-                    'Company Policy' => route('company-policy.index'),
-                ],
-            ]
-        );
-        $company_policy = CompanyPolicy::first();
-        $company_details = CompanyDetail::first();
+        if(Auth::check() == false){
+            return redirect()->route('login');
+        }
+        else{
+            session(
+                [
+                    'menu_active' => 'company_policy',
+                    'page_title' => 'Company Policy',
+                    'page_title_description' => 'Manage Company Policy & Details',
+                    'breadcrumb' => [
+                        'Home' => route('admin.dashboard'),
+                        'Company Policy' => route('company-policy.index'),
+                    ],
+                ]
+            );
+            $company_policy = CompanyPolicy::first();
+            $company_details = CompanyDetail::first();
 
-        return view('admin.company-policy.index', compact('company_policy', 'company_details'));
+            return view('admin.company-policy.index', compact('company_policy', 'company_details'));
+        }
     }
 
     public function show(CompanyPolicy $companyPolicy){
-        return redirect()->route('company-policy.index', $companyPolicy);
+        if(Auth::check() == false){
+            return redirect()->route('login');
+        }
+        else{
+            return redirect()->route('company-policy.index', $companyPolicy);
+        }
     }
 
     /**
@@ -47,21 +59,26 @@ class CompanyPolicyController extends Controller
      */
     public function edit(CompanyPolicy $companyPolicy)
     {
-        session(
-            [
-                'menu_active' => 'company_policy',
-                'page_title' => 'Company Policy',
-                'page_title_description' => 'Manage Company Policy & Details',
-                'breadcrumb' => [
-                    'Home' => route('admin.dashboard'),
-                    'Company Policy' => route('company-policy.index'),
-                    'Edit' => route('company-policy.edit', $companyPolicy->id),
-                ],
-            ]
-        );
-        $company_policy = CompanyPolicy::first();
-        
-        return view('admin.company-policy.edit', compact('company_policy'));
+        if(Auth::check() == false){
+            return redirect()->route('login');
+        }
+        else{
+            session(
+                [
+                    'menu_active' => 'company_policy',
+                    'page_title' => 'Company Policy',
+                    'page_title_description' => 'Manage Company Policy & Details',
+                    'breadcrumb' => [
+                        'Home' => route('admin.dashboard'),
+                        'Company Policy' => route('company-policy.index'),
+                        'Edit' => route('company-policy.edit', $companyPolicy->id),
+                    ],
+                ]
+            );
+            $company_policy = CompanyPolicy::first();
+            
+            return view('admin.company-policy.edit', compact('company_policy'));
+        }
     }
 
     /**
@@ -73,10 +90,14 @@ class CompanyPolicyController extends Controller
      */
     public function update(UpdateCompanyPolicyRequest $request, CompanyPolicy $companyPolicy)
     {
-        $company_policy = CompanyPolicy::first();
-        // dd($company_policy, $request->all());
-        $company_policy->update($request->all());
-        return redirect()->route('company-policy.index')->with('success', 'Company Policy updated successfully');
+        if(Auth::check() == false){
+            return redirect()->route('login');
+        }
+        else{
+            $company_policy = CompanyPolicy::first();
+            $company_policy->update($request->all());
+            return redirect()->route('company-policy.index')->with('success', 'Company Policy updated successfully');
+        }
     }
 
     /**

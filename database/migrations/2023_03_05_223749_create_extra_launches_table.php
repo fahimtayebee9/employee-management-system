@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->timestamp('date');
             $table->integer('count')->default(0);
+            $table->integer('total_launch')->default(0);
             $table->timestamps();
         });
     }

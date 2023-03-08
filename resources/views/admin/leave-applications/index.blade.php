@@ -66,7 +66,7 @@
                     <div class="right-col w-50 d-flex justify-content-end align-items-center">
                         <div class="leave-filter mr-3 w-50">
                             <select class="form-control custom-select select2-hidden-accessible w-100" name="leave_type" id="leave-type-filter">
-                                <option>Select Type</option>
+                                <option>Select Leave Type</option>
                                 <option value="1">Full Day Paid Leave</option>
                                 <option value="2">Half Day Non-Paid Leave</option>
                                 <option value="3">Full Day Non-Paid Leave</option>
@@ -74,7 +74,7 @@
                         </div>
                         <div class="leave-filter mr-3 w-50">
                             <select class="form-control custom-select select2-hidden-accessible w-100" name="leave_type" id="leave-type-filter">
-                                <option>Select Type</option>
+                                <option>Select Status</option>
                                 <option value="1">Full Day Paid Leave</option>
                                 <option value="2">Half Day Non-Paid Leave</option>
                                 <option value="3">Full Day Non-Paid Leave</option>
@@ -84,65 +84,65 @@
                 </div>
             </div>
             <div class="body">
-            <div class="table-responsive">
-                <table class="table table-striped custom-table mb-0">
-                    <thead>
-                        <tr>
-                            <th width="5%">#</th>
-                            <th>Employee</th>
-                            <th width="15%">Leave Date </th>
-                            <th>Subject</th>
-                            <th>Request Date</th>
-                            <th>Status</th>
-                            <th >Leave Type</th>
-                            <th width="5%">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbl-leave-applications">
-                        @foreach($leaveApplicationsList as $leave)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td class="d-flex justify-content-start align-items-center">
-                                <span>
-                                    <h6 class="mb-0">{{$leave->employee->user->first_name . ' '. $leave->employee->user->last_name}}</h6>
-                                    <span>Employee ID: <b>{{$leave->employee->employee_id}}</b></span>
-                                </span>
-                            </td>
-                            <td>
-                                <b>{{ Carbon\Carbon::parse($leave->leave_from)->format('d M, Y') }}</b>
-                                to
-                                <b>{{ Carbon\Carbon::parse($leave->leave_to)->format('d M, Y') }}</b>
-                            </td>
-                            <td>{{ $leave->subject }}</td>
-                            <td>{{ Carbon\Carbon::parse($leave->created_at)->format('d M, Y') }}</td>
-                            <td>
-                                @if($leave->status_by_astmanager == 1 && $leave->status_by_hr == 1 )
-                                <span class="badge badge-pill badge-success">Approved</span>
-                                @elseif($leave->status == 2)
-                                <span class="badge badge-pill badge-danger">Rejected</span>
-                                @else
-                                <span class="badge badge-pill badge-warning">Pending</span>
-                                @endif
-                            </td>
+                <div class="table-responsive">
+                    <table class="table table-striped custom-table mb-0" id="tbl-leave-applications">
+                        <thead>
+                            <tr>
+                                <th width="5%">#</th>
+                                <th>Employee</th>
+                                <th width="15%">Leave Date </th>
+                                <th>Subject</th>
+                                <th>Request Date</th>
+                                <th>Status</th>
+                                <th >Leave Type</th>
+                                <th width="5%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbd-leave-applications">
+                            @foreach($leaveApplicationsList as $leave)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td class="d-flex justify-content-start align-items-center">
+                                    <span>
+                                        <h6 class="mb-0">{{$leave->employee->user->first_name . ' '. $leave->employee->user->last_name}}</h6>
+                                        <span>ID: <b>{{$leave->employee->employee_id}}</b></span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <b>{{ Carbon\Carbon::parse($leave->leave_from)->format('d M, Y') }}</b>
+                                    to
+                                    <b>{{ Carbon\Carbon::parse($leave->leave_to)->format('d M, Y') }}</b>
+                                </td>
+                                <td>{{ $leave->subject }}</td>
+                                <td>{{ Carbon\Carbon::parse($leave->created_at)->format('d M, Y') }}</td>
+                                <td>
+                                    @if($leave->status_by_astmanager == 1 && $leave->status_by_hr == 1 )
+                                    <span class="badge badge-pill badge-success">Approved</span>
+                                    @elseif($leave->status_by_astmanager == 0 || $leave->status_by_hr == 0 )
+                                    <span class="badge badge-pill badge-warning">Pending</span>
+                                    @else
+                                    <span class="badge badge-pill badge-danger">Rejected</span>
+                                    @endif
+                                </td>
 
-                            <td>
-                                @if($leave->leave_type == 1)
-                                <span class="badge badge-pill badge-success">Full Day Paid Leave</span>
-                                @elseif($leave->leave_type == 2)
-                                <span class="badge badge-pill badge-danger">Half Day Non-Paid Leave</span>
-                                @else
-                                <span class="badge badge-pill badge-warning">Full Day Non-Paid Leave</span>
-                                @endif
-                            </td>
-                            <td>
-                                <a href="" class="btn btn-outline-warning">View</a>
-                                <a href="" class="btn btn-outline-danger">Delete</a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                                <td>
+                                    @if($leave->leave_type == 1)
+                                    <span class="badge badge-pill badge-success">Full Day Paid Leave</span>
+                                    @elseif($leave->leave_type == 2)
+                                    <span class="badge badge-pill badge-danger">Half Day Non-Paid Leave</span>
+                                    @else
+                                    <span class="badge badge-pill badge-warning">Full Day Non-Paid Leave</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <a href="" class="btn btn-outline-warning">View</a>
+                                    <a href="" class="btn btn-outline-danger">Delete</a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

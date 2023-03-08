@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class RoleManagerController extends Controller
 {
@@ -19,20 +20,25 @@ class RoleManagerController extends Controller
      */
     public function index()
     {
-        session(
-            [
-                'menu_active' => 'role_managers',
-                'page_title' => 'Administrative Roles',
-                'page_title_description' => 'Manage Administrative Roles & Details',
-                'breadcrumb' => [
-                    'Home' => route('admin.dashboard'),
-                    'Administrative Roles' => route('roles.index'),
-                ],
-            ]
-        );
+        if(Auth::check() == false){
+            return redirect()->route('login');
+        }
+        else{
+            session(
+                [
+                    'menu_active' => 'role_managers',
+                    'page_title' => 'Administrative Roles',
+                    'page_title_description' => 'Manage Administrative Roles & Details',
+                    'breadcrumb' => [
+                        'Home' => route('admin.dashboard'),
+                        'Administrative Roles' => route('roles.index'),
+                    ],
+                ]
+            );
 
-        $roles_list = RoleManager::all();
-        return view('admin.settings.role', compact('roles_list'));
+            $roles_list = RoleManager::all();
+            return view('admin.settings.role', compact('roles_list'));
+        }
     }
 
     /**
@@ -53,20 +59,25 @@ class RoleManagerController extends Controller
      */
     public function store(StoreRoleManagerRequest $request)
     {
-        $validated_data = Validator::make($request->all(), $request->rules(), $request->messages());
-
-        if($validated_data->passes()){
-            $roleManager = new RoleManager();
-            $roleManager->name = $request->name;
-            $roleManager->description = $request->description;
-            $roleManager->status = $request->status;
-            $roleManager->slug = Str::slug($request->name);
-            $roleManager->save();
-
-            return redirect()->back()->with('success', 'Administrative Role created successfully');
+        if(Auth::check() == false){
+            return redirect()->route('login');
         }
-        
-        return redirect()->back()->with('error', 'Administrative Role creation failed');
+        else{
+            $validated_data = Validator::make($request->all(), $request->rules(), $request->messages());
+
+            if($validated_data->passes()){
+                $roleManager = new RoleManager();
+                $roleManager->name = $request->name;
+                $roleManager->description = $request->description;
+                $roleManager->status = $request->status;
+                $roleManager->slug = Str::slug($request->name);
+                $roleManager->save();
+
+                return redirect()->back()->with('success', 'Administrative Role created successfully');
+            }
+            
+            return redirect()->back()->with('error', 'Administrative Role creation failed');
+        }
     }
 
     /**
@@ -100,20 +111,25 @@ class RoleManagerController extends Controller
      */
     public function update(UpdateRoleManagerRequest $request, RoleManager $roleManager)
     {
-        $validated_data = Validator::make($request->all(), $request->rules(), $request->messages())->validate();
-
-        if($validated_data){
-            $roleManager = RoleManager::find($roleManager->id);
-            $roleManager->name = $request->name;
-            $roleManager->description = $request->description;
-            $roleManager->status = $request->status;
-            $roleManager->slug = Str::slug($request->name);
-            $roleManager->update();
-
-            return redirect()->back()->with('success', 'Administrative Role updated successfully');
+        if(Auth::check() == false){
+            return redirect()->route('login');
         }
-        
-        return redirect()->back()->with('error', 'Department updation failed');
+        else{
+            $validated_data = Validator::make($request->all(), $request->rules(), $request->messages())->validate();
+
+            if($validated_data){
+                $roleManager = RoleManager::find($roleManager->id);
+                $roleManager->name = $request->name;
+                $roleManager->description = $request->description;
+                $roleManager->status = $request->status;
+                $roleManager->slug = Str::slug($request->name);
+                $roleManager->update();
+
+                return redirect()->back()->with('success', 'Administrative Role updated successfully');
+            }
+            
+            return redirect()->back()->with('error', 'Department updation failed');
+        }
     }
 
     /**

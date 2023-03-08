@@ -8,6 +8,8 @@ use App\Http\Requests\UpdatePermissionManagerRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\RoleManager;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PermissionManagerController extends Controller
 {
@@ -18,20 +20,25 @@ class PermissionManagerController extends Controller
      */
     public function index()
     {
-        session(
-            [
-                'menu_active' => 'permission_managers',
-                'page_title' => 'Administrative Permissions',
-                'page_title_description' => 'Manage Administrative Permissions & Details',
-                'breadcrumb' => [
-                    'Home' => route('admin.dashboard'),
-                    'Administrative Permissions' => route('permissions.index'),
-                ],
-            ]
-        );
+        if(Auth::check() == false){
+            return redirect()->route('login');
+        }
+        else{
+            session(
+                [
+                    'menu_active' => 'permission_managers',
+                    'page_title' => 'Administrative Permissions',
+                    'page_title_description' => 'Manage Administrative Permissions & Details',
+                    'breadcrumb' => [
+                        'Home' => route('admin.dashboard'),
+                        'Administrative Permissions' => route('permissions.index'),
+                    ],
+                ]
+            );
 
-        $permissions_list = PermissionManager::all();
-        return view('admin.permissions.index', compact('permissions_list'));
+            $permissions_list = PermissionManager::all();
+            return view('admin.permissions.index', compact('permissions_list'));
+        }
     }
 
     /**
@@ -41,7 +48,12 @@ class PermissionManagerController extends Controller
      */
     public function create()
     {
-        return view('admin.permissions.create');
+        if(Auth::check() == false){
+            return redirect()->route('login');
+        }
+        else{
+            return view('admin.permissions.create');
+        }
     }
 
     /**
@@ -52,16 +64,21 @@ class PermissionManagerController extends Controller
      */
     public function store(StorePermissionManagerRequest $request)
     {
-        $validated_data = Validator::make($request->all(), $request->rules(), $request->messages())->validate();
-
-        if($validated_data) {
-            $permission = PermissionManager::create($validated_data);
-            $permission->save();
-
-            return redirect()->route('permissions.index')->with('success', 'Permission has been added successfully');
+        if(Auth::check() == false){
+            return redirect()->route('login');
         }
+        else{
+            $validated_data = Validator::make($request->all(), $request->rules(), $request->messages())->validate();
 
-        return redirect()->route('permissions.index')->with('error', 'Permission has not been added successfully');
+            if($validated_data) {
+                $permission = PermissionManager::create($validated_data);
+                $permission->save();
+
+                return redirect()->route('permissions.index')->with('success', 'Permission has been added successfully');
+            }
+
+            return redirect()->route('permissions.index')->with('error', 'Permission has not been added successfully');
+        }
     }
 
     /**
@@ -83,14 +100,19 @@ class PermissionManagerController extends Controller
      */
     public function edit($permissionManager)
     {
-        $permissionManager = PermissionManager::find($permissionManager);
-
-        if($permissionManager) {
-            $roles_list = RoleManager::all();
-            return view('admin.permissions.edit', compact('permissionManager', 'roles_list'));
+        if(Auth::check() == false){
+            return redirect()->route('login');
         }
+        else{
+            $permissionManager = PermissionManager::find($permissionManager);
 
-        return redirect()->route('permissions.index')->with('error', 'Permission not found');
+            if($permissionManager) {
+                $roles_list = RoleManager::all();
+                return view('admin.permissions.edit', compact('permissionManager', 'roles_list'));
+            }
+
+            return redirect()->route('permissions.index')->with('error', 'Permission not found');
+        }
     }
 
     /**
@@ -102,18 +124,21 @@ class PermissionManagerController extends Controller
      */
     public function update(UpdatePermissionManagerRequest $request, $permissionManager)
     {
-        // dd($request->all());
-
-        $validated_data = Validator::make($request->all(), $request->rules(), $request->messages())->validate();
-
-        if($validated_data) {
-            $permissionManager = PermissionManager::find($permissionManager);
-            $permissionManager->update($validated_data);
-
-            return redirect()->route('permissions.index')->with('success', 'Permission has been updated successfully');
+        if(Auth::check() == false){
+            return redirect()->route('login');
         }
+        else{
+            $validated_data = Validator::make($request->all(), $request->rules(), $request->messages())->validate();
 
-        return redirect()->route('permissions.index')->with('error', 'Permission has not been updated successfully');
+            if($validated_data) {
+                $permissionManager = PermissionManager::find($permissionManager);
+                $permissionManager->update($validated_data);
+
+                return redirect()->route('permissions.index')->with('success', 'Permission has been updated successfully');
+            }
+
+            return redirect()->route('permissions.index')->with('error', 'Permission has not been updated successfully');
+        }
     }
 
     /**

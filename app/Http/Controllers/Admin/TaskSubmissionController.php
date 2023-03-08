@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\EmployeeRole;
 use App\Models\User;
-use PhpParser\Node\Expr\Cast\Object_;
+use Illuminate\Support\Facades\Auth;
 
 class TaskSubmissionController extends Controller
 {
@@ -22,64 +22,79 @@ class TaskSubmissionController extends Controller
      */
     public function index()
     {
-        session(
-            [
-                'menu_active' => 'task-submissions',
-                'page_title' => 'Task Submissions',
-                'page_title_description' => 'Manage and View Submissions',
-                'breadcrumb' => [
-                    'Home' => route('admin.dashboard'),
-                    'Tasks' => ''
-                ],
-            ]
-        );
+        if(Auth::check() == false){
+            return redirect()->route('login');
+        }
+        else{
+            session(
+                [
+                    'menu_active' => 'task-submissions',
+                    'page_title' => 'Task Submissions',
+                    'page_title_description' => 'Manage and View Submissions',
+                    'breadcrumb' => [
+                        'Home' => route('admin.dashboard'),
+                        'Tasks' => ''
+                    ],
+                ]
+            );
 
-        $taskForms = TaskForm::all();
-        $taskSubmissions = TaskSubmission::orderby('id', 'desc')->paginate(10);
-        $employees = Employee::all();
-        $designations = EmployeeRole::all();
-        return view('admin.tasks.index', compact('taskSubmissions', 'employees', 'taskForms', 'designations'));
+            $taskForms = TaskForm::all();
+            $taskSubmissions = TaskSubmission::orderby('id', 'desc')->paginate(10);
+            $employees = Employee::all();
+            $designations = EmployeeRole::all();
+            return view('admin.tasks.index', compact('taskSubmissions', 'employees', 'taskForms', 'designations'));
+        }
     }
 
     public function getByDate($request)
     {
-        $taskSubmissions = TaskSubmission::orderby('id', 'desc')->whereDate('created_at', $request)->get();
-        $employees = Employee::all();
-        $taskForms = TaskForm::all();
-        $designations = EmployeeRole::all();
+        if(Auth::check() == false){
+            return redirect()->route('login');
+        }
+        else{
+            $taskSubmissions = TaskSubmission::orderby('id', 'desc')->whereDate('created_at', $request)->get();
+            $employees = Employee::all();
+            $taskForms = TaskForm::all();
+            $designations = EmployeeRole::all();
 
-        return response()->json([
-            'taskSubmissions' => $taskSubmissions,
-            'employees' => $employees,
-            'taskForms' => $taskForms,
-            'users' => User::all(),
-            'designations' => $designations,
-        ]);
+            return response()->json([
+                'taskSubmissions' => $taskSubmissions,
+                'employees' => $employees,
+                'taskForms' => $taskForms,
+                'users' => User::all(),
+                'designations' => $designations,
+            ]);
+        }
     }
 
     public function getbyDesignation($request)
     {
-        $taskSubmissions = TaskSubmission::orderby('id', 'desc')->get();
-        
-        // filter by designation
-        $tasks_by_designation = [];
-        foreach ($taskSubmissions as $task) {
-            if($request == $task->employee->designation_id){
-                $tasks_by_designation[] = $task;
-            }
+        if(Auth::check() == false){
+            return redirect()->route('login');
         }
-        $taskSubmissions = collect($tasks_by_designation);
-        $employees = Employee::all();
-        $taskForms = TaskForm::all();
-        $designations = EmployeeRole::all();
+        else{
+            $taskSubmissions = TaskSubmission::orderby('id', 'desc')->get();
+            
+            // filter by designation
+            $tasks_by_designation = [];
+            foreach ($taskSubmissions as $task) {
+                if($request == $task->employee->designation_id){
+                    $tasks_by_designation[] = $task;
+                }
+            }
+            $taskSubmissions = collect($tasks_by_designation);
+            $employees = Employee::all();
+            $taskForms = TaskForm::all();
+            $designations = EmployeeRole::all();
 
-        return response()->json([
-            'taskSubmissions' => $taskSubmissions,
-            'employees' => $employees,
-            'taskForms' => $taskForms,
-            'users' => User::all(),
-            'designations' => $designations,
-        ]);
+            return response()->json([
+                'taskSubmissions' => $taskSubmissions,
+                'employees' => $employees,
+                'taskForms' => $taskForms,
+                'users' => User::all(),
+                'designations' => $designations,
+            ]);
+        }
     }
 
     /**

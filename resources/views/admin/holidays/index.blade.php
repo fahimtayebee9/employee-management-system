@@ -42,7 +42,7 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="header">
-                <div class="table-header-actions row">
+                <div class="table-header-actions row  justify-content-between">
                     <div class="col-md-6">
                         <h2>Holidays List</h2>
                         <div class="holiday-scheme">
@@ -56,13 +56,32 @@
                             </label>
                         </div>
                     </div>
-                    <div class="col-md-6 justify-content-end d-flex">
-                        
+                    <div class="col-md-3">
+                        <select class="form-control custom-select select2-hidden-accessible w-100" name="month-flt" id="month-filter">
+                            <option>Select Month</option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
                     </div>
                 </div>
             </div>
             <div class="body">
                 <div class="table-responsive">
+                    @php
+                        $daysInMonth = Illuminate\Support\Carbon::createFromDate(date("Y"), date('m'), 1)->daysInMonth;
+                        $date_in_month = Illuminate\Support\Carbon::create(date("Y"), date('m'), 1);
+                        $count = 0;
+                    @endphp
                     <table class="table table-hover m-b-0">
                         <thead class="thead-dark">
                             <tr>
@@ -74,54 +93,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- foreach loop for holidays_list and if date has expired add text-danger class in tr -->
-                            @php
-                                $months_array = [1,2,3,4,5,6,7,8,9,10,11,12];
-                            @endphp
+                            
 
-                            @foreach($months_array as $month)
-                                @if($month == date('m'))
-                                    @php
-                                        $daysInMonth = Illuminate\Support\Carbon::createFromDate(date("Y"), $month, 1)->daysInMonth;
-                                        $date_in_month = Illuminate\Support\Carbon::create(date("Y"), $month, 1);
-                                    @endphp
-
-                                    @for( $day = 1; $day <= $daysInMonth; $day++)
-                                        
-                                        @php $count = 1; @endphp
-
-                                        @foreach($holidays_list as $holiday)
-                                        
-                                            @php
-                                                $hdate = \App\Models\CompanyPolicy::first()->weekly_holiday;
-                                                $mdate = Illuminate\Support\Carbon::create(date("Y"), $month, $day);
-                                                $mdateDay = Illuminate\Support\Carbon::create(date("Y"), $month, $day)
-                                            @endphp
-
-                                            @if ( $mdate->dayOfWeek == $hdate)
-                                                <tr class="{{ Illuminate\Support\Carbon::now() > $mdate->format('Y-m-d') ? 'text-danger' : 'text-success' }}">
-                                                    <td></td>
-                                                    <td>{{ $mdate->format('d M, Y') }}</td>
-                                                    <td>{{ $mdate->next($mdate->dayOfWeek)->format('l') }}</td>
-                                                    <td>{{ __('Weekly Holiday') }}</td>
-                                                    <td>
-                                                        @if($mdate->dayOfWeek !== $hdate)
-                                                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#md-edit-holidays" data-id="{{ $holiday->id }}" 
-                                                            data-name="{{ $holiday->name }}" data-date="{{ $holiday->date }}"><i class="fa fa-edit"></i></button>
-                                                        @endif
-                                                        
-                                                        <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#md-delete-holidays" data-id="{{ $holiday->id }}" 
-                                                            data-name="{{ $holiday->name }}"><i class="fa fa-trash"></i></button>
-                                                    </td>
-                                                </tr>
-                                            @endif
-
-                                            @php $count++; @endphp
-                                            
-                                        @endforeach
-                                    @endfor
-                                @endif
-                                
+                            @foreach($holidays_list as $holiday)
+                                <tr class="{{ Illuminate\Support\Carbon::now() > Illuminate\Support\Carbon::parse($holiday->date)->format('Y-m-d') ? 'text-danger' : 'text-success' }}">
+                                    <td>{{ ++$count }}</td>
+                                    <td>{{ Illuminate\Support\Carbon::parse($holiday->date)->format('d M, Y') }}</td>
+                                    <td>{{ Illuminate\Support\Carbon::parse($holiday->date)->format('l') }}</td>
+                                    <td>{{ $holiday->name }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#md-delete-holidays" 
+                                            data-id="{{ $holiday->id }}" data-name="{{ $holiday->name }}"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                </tr>
                             @endforeach
 
                             

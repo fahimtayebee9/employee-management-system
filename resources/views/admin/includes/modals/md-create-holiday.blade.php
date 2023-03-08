@@ -21,7 +21,7 @@
                     </div>
                     <div class="form-group">
                         <label for="date">Date</label>
-                        <input type="text" name="date" id="date" class="form-control @error('date') is-invalid @enderror" value="{{ old('date') }}" required>
+                        <input type="date" name="date" id="date" class="form-control @error('date') is-invalid @enderror" value="{{ old('date') }}" required>
                         @error('date')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
